@@ -191,8 +191,7 @@
         card.className = 'card';
         card.onclick = ()=>window.open(a.link,'_blank');
 
-        // variation aléatoire de fond pour le texte
-        const bgOpacity = (Math.random()*0.2 + 0.7).toFixed(2); // 0.7 à 0.9
+        const bgOpacity = (Math.random()*0.2 + 0.7).toFixed(2); // variation fond texte
         card.innerHTML = `
           <img src="${a.image}" alt="${a.name}">
           <div class="card-body">
