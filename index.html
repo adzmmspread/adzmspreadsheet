@@ -44,7 +44,7 @@
     }
 
     .header-image {
-      max-width: 100%;
+      max-width: 80%;
       height: auto;
       border-radius: 12px;
       margin-bottom: 15px;
@@ -52,12 +52,15 @@
 
     .search input {
       padding: 12px;
-      width: 100%;
+      width: 80%;
       border-radius: 12px;
       border: 1px solid #555;
       background: #111;
       color: white;
       font-size: 16px;
+      font-family: 'Courier New', monospace; /* police différente */
+      display: block;
+      margin: 0 auto;
     }
 
     .grid {
@@ -116,11 +119,11 @@
 
   <div class="container">
     <!-- Ton image en haut -->
-    <img src="https://i.imgur.com/bzUCzL7.png" alt="Header Image" class="header-image">
+    <img src="https://i.imgur.com/wMhd6LV.jpeg" alt="Header Image" class="header-image">
 
     <!-- Barre de recherche juste sous l'image -->
     <div class="search">
-      <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." disabled />
+      <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." />
     </div>
 
     <div class="grid" id="articleGrid"></div>
