@@ -174,10 +174,18 @@
   });
 
   // ARTICLES
-  const articles = [
-    { name: "Pull Nike Tech", price: "16.00", image: "https://i.imgur.com/glqnO1W.jpeg", link: "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA" },
-    { name: "T-shirt Running Nike", price: "5.00", image: "https://i.imgur.com/C43E1rN.jpeg", link: "https://hipobuy.com/pages/goods/details?channelId=1688&inviteCode=E6EMQHWWA" }
-  ];
+  let articles = [];
+  let autoImageIndex = 1;
+
+  function addArticleAuto(name, price, link) {
+    articles.push({
+      name: name,
+      price: price,
+      image: `item-${autoImageIndex}.jpg`,
+      link: link
+    });
+    autoImageIndex++;
+  }
 
   function renderArticles(){
     const grid = document.getElementById('articleGrid');
@@ -203,6 +211,10 @@
         grid.appendChild(card);
       });
   }
+
+  // AJOUT DES ARTICLES
+  addArticleAuto("Pull Nike Trail", "18.00", "https://hipobuy.com/pages/goods/details?spuNo=7541137527&channel=weidian&inviteCode=E6EMQHWWA");
+  addArticleAuto("T-shirt Nike Running", "5.00", "https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
 
   // AFFICHER LES ARTICLES AU LANCEMENT
   renderArticles();
