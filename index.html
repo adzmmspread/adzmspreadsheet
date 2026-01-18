@@ -92,11 +92,11 @@
   }
 
   .card-body .text {
-    display: inline-block;              /* s’adapte au texte */
-    padding: 8px 12px;                  /* padding généreux pour plus d’espace */
+    display: inline-block;
+    padding: 8px 12px;
     border-radius: 8px;
-    background-color: rgba(0,0,0,0.8);  /* fond noir semi-transparent */
-    border: 1px solid #555555;          /* bordure grise légère */
+    background-color: rgba(0,0,0,0.8);
+    border: 1px solid #555555;
     color: white;
   }
 
@@ -106,7 +106,7 @@
   }
 
   .card-body .price {
-    color: #00ff7f; /* prix vert */
+    color: #00ff7f;
     font-weight: bold;
     font-size: 13px;
   }
@@ -174,12 +174,10 @@
   });
 
   // ARTICLES
-  let articles = [];
-
-  function addArticle(name, price, image, link){
-    articles.push({name, price:Number(price).toFixed(2), image, link});
-    renderArticles();
-  }
+  const articles = [
+    { name: "Pull Nike Tech", price: "16.00", image: "https://i.imgur.com/glqnO1W.jpeg", link: "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA" },
+    { name: "T-shirt Running Nike", price: "5.00", image: "https://i.imgur.com/C43E1rN.jpeg", link: "https://hipobuy.com/pages/goods/details?channelId=1688&inviteCode=E6EMQHWWA" }
+  ];
 
   function renderArticles(){
     const grid = document.getElementById('articleGrid');
@@ -206,9 +204,8 @@
       });
   }
 
-  // AJOUT DES ARTICLES
-  addArticle("Pull Nike Tech",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("T-shirt Running Nike",5.00,"https://i.imgur.com/C43E1rN.jpeg","https://hipobuy.com/pages/goods/details?channelId=1688&inviteCode=E6EMQHWWA");
+  // AFFICHER LES ARTICLES AU LANCEMENT
+  renderArticles();
 
 </script>
 </body>
