@@ -59,7 +59,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2 articles par ligne */
     gap: 15px;
   }
 
@@ -175,17 +175,27 @@
 
   // ARTICLES
   let articles = [];
-  let autoImageIndex = 1;
 
-  function addArticleAuto(name, price, link) {
-    articles.push({
-      name: name,
-      price: price,
-      image: `item-${autoImageIndex}.jpg`,
-      link: link
-    });
-    autoImageIndex++;
-  }
+  articles.push({
+    name: "Pull Nike Tech",
+    price: "16.00",
+    image: "https://i.imgur.com/glqnO1W.jpeg",
+    link: "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA"
+  });
+
+  articles.push({
+    name: "T-shirt Nike Running",
+    price: "5.00",
+    image: "https://i.imgur.com/XXXXXXX.jpg", // remplace par ton lien Imgur
+    link: "https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA"
+  });
+
+  articles.push({
+    name: "Pull Nike Trail",
+    price: "18.00",
+    image: "https://i.imgur.com/J7H6ZDf.jpeg",
+    link: "https://hipobuy.com/pages/goods/details?spuNo=7541137527&channel=weidian&inviteCode=E6EMQHWWA"
+  });
 
   function renderArticles(){
     const grid = document.getElementById('articleGrid');
@@ -212,13 +222,7 @@
       });
   }
 
-  // AJOUT DES ARTICLES
-  addArticleAuto("Pull Nike Trail", "18.00", "https://hipobuy.com/pages/goods/details?spuNo=7541137527&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticleAuto("T-shirt Nike Running", "5.00", "https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
-
-  // AFFICHER LES ARTICLES AU LANCEMENT
   renderArticles();
-
 </script>
 </body>
 </html>
