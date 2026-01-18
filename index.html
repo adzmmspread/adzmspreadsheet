@@ -1,0 +1,96 @@
+import asyncio
+import nest_asyncio
+from telegram import Update, InputMediaPhoto
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+
+# Permet de réutiliser l'event loop déjà actif (Termux)
+nest_asyncio.apply()
+
+# --- CONFIG ---
+TOKEN = "8175547889:AAE9eV5a6wdF630r4tGgCfU_iDbfEBgNT_I"
+CHANNEL_ID = -1003608187194  # ID numérique corrigé pour ton channel
+OWNER_ID = 6195882531
+
+STICKY_TEXT = (
+    "Les prix peuvent etre differents de ceux affiches si les vendeurs "
+    "decalent leur prix de 1-2€.\n"
+    "!! Si un lien ne marche plus contactez moi !! (adzm)"
+)
+
+user_photos = {}
+
+# --- GESTION DES PHOTOS ---
+async def handle_photos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    if user_id != OWNER_ID:
+        return
+    if user_id not in user_photos:
+        user_photos[user_id] = []
+    photo_id = update.message.photo[-1].file_id
+    user_photos[user_id].append(photo_id)
+
+# --- GESTION DU TEXTE ---
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    if user_id != OWNER_ID:
+        return
+
+    text = update.message.text.strip()
+    lines = text.split("\n")
+
+    if len(lines) < 3:
+        await update.message.reply_text(
+            " Format incorrect\n1 : Nom de l'article\n2 : Prix\n3 : Lien Hipobuy\nTu peux envoyer des photos avant."
+        )
+        return
+
+    article, price, link = lines[0], lines[1], lines[2]
+
+    if not price.endswith("€"):
+        price += "€"
+
+    caption = (
+        f"Article : {article}\n"
+        f"Prix : {price}\n"
+        f"Lien : {link}\n\n"
+        f"! S'INSCRIRE ICI : https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA"
+    )
+
+    # Attente jusqu'à 60s que les photos arrivent
+    for _ in range(12):
+        if user_id in user_photos and len(user_photos[user_id]) > 0:
+            break
+        await asyncio.sleep(5)
+
+    media = [InputMediaPhoto(pid) for pid in user_photos.get(user_id, [])]
+
+    if media:
+        try:
+            await context.bot.send_media_group(chat_id=CHANNEL_ID, media=media)
+        except Exception as e:
+            print("Erreur en envoyant les photos:", e)
+
+    try:
+        await context.bot.send_message(chat_id=CHANNEL_ID, text=caption)
+        await context.bot.send_message(chat_id=CHANNEL_ID, text=STICKY_TEXT)
+    except Exception as e:
+        print("Erreur en envoyant les messages:", e)
+
+    user_photos[user_id] = []
+    await update.message.reply_text(" Produit envoye avec succes")
+
+# --- MAIN ---
+async def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photos))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+    print("Bot lance et fonctionne ")
+    await asyncio.Event().wait()  # pour que le bot tourne 24/7
+
+# --- LANCEMENT ---
+if __name__ == "__main__":
+    asyncio.get_event_loop().run_until_complete(main())
