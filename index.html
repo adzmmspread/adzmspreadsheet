@@ -1,129 +1,195 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>adzmspreadsheet</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    font-family: 'Montserrat', sans-serif;
-    background: black;
-    color: white;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adzmspreadsheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: black;
+      color: white;
+      overflow-x: hidden;
+    }
 
-  .container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 10px;
-  }
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
 
-  .card {
-    background: #111;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-  }
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 180px;
+    }
 
-  .card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
-  }
+    #searchInput {
+      display: block;
+      margin: 10px auto 20px auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
 
-  .card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    display: block;
-    border-bottom: 2px solid #000;
-  }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
+    }
 
-  .card-body {
-    padding: 8px;
-    background: #000;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    text-align: center;
-  }
+    .card {
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
 
-  .name {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 3px;
-  }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+    }
 
-  .price {
-    font-size: 12px;
-    color: #00ff7f;
-    font-weight: 600;
-  }
+    .card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
 
-  .arrow {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    font-size: 12px;
-    padding: 3px 5px;
-    border-radius: 50%;
-    font-weight: bold;
-  }
-</style>
+    .card-body {
+      padding: 5px 10px;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-body .info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .name {
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .price {
+      font-size: 14px;
+      font-weight: bold;
+      color: #39ff14;
+    }
+
+    .arrow {
+      font-size: 16px;
+      color: white;
+    }
+
+    @media(max-width: 500px){
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+
+      .card img {
+        height: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
+
+<canvas id="stars"></canvas>
+
 <div class="container">
+  <img class="logo" src="https://i.imgur.com/wMhd6LV.jpeg" alt="Logo ADZM">
+
+  <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
+
   <div class="grid" id="articleGrid"></div>
 </div>
 
 <script>
-const articles = [
-  {
-    name: "Pull Nike Tech",
-    price: 16.00,
-    image: "https://i.imgur.com/glqnO1W.jpeg",
-    link: "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA"
-  },
-  {
-    name: "T-shirt CDG",
-    price: 10.00,
-    image: "https://i.imgur.com/wMhd6LV.jpeg",
-    link: "https://hipobuy.com/pages/goods/details?id=1234567890"
+  // étoiles aléatoires
+  const canvas = document.getElementById("stars");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const stars = [];
+  for(let i=0;i<150;i++){
+    stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5});
   }
-];
+  function drawStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle="white";
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
 
-function renderArticles() {
-  const grid = document.getElementById('articleGrid');
-  grid.innerHTML = '';
+  // articles
+  let articles = [];
 
-  articles.forEach(article => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.onclick = () => window.open(article.link, '_blank');
+  function addArticle(name, price, image, link){
+    articles.push({name, price, image, link});
+    renderArticles();
+  }
 
-    card.innerHTML = `
-      <img src="${article.image}" alt="${article.name}">
-      <div class="card-body">
-        <div class="name">${article.name}</div>
-        <div class="price">${article.price.toFixed(2)} €</div>
-      </div>
-      <div class="arrow">→</div>
-    `;
+  function renderArticles(){
+    const grid = document.getElementById('articleGrid');
+    const filter = document.getElementById('searchInput').value.toLowerCase();
+    grid.innerHTML = '';
+    articles
+      .filter(a=>a.name.toLowerCase().includes(filter))
+      .forEach(a=>{
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = ()=>window.open(a.link,'_blank');
+        card.innerHTML = `
+          <img src="${a.image}" alt="${a.name}">
+          <div class="card-body">
+            <div class="info">
+              <div class="name">${a.name}</div>
+              <div class="price">${a.price} €</div>
+            </div>
+            <div class="arrow">➔</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+  }
 
-    grid.appendChild(card);
-  });
-}
+  // test avec 2 articles
+  addArticle("Pull Nike Tech", 16.00, "https://i.imgur.com/glqnO1W.jpeg", "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA");
+  addArticle("T-shirt CDG", 10.00, "https://i.imgur.com/wMhd6LV.jpeg", "#");
 
-renderArticles();
 </script>
 </body>
 </html>
