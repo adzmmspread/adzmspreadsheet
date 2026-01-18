@@ -3,193 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adzmspreadsheet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <title>ADZM Finds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Montserrat', sans-serif;
+      padding: 0;
+      font-family: 'Roboto Mono', monospace;
       background: black;
       color: white;
       overflow-x: hidden;
     }
-
-    #stars {
+    /* Points blancs aléatoires fond */
+    body::before {
+      content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
+      top:0; left:0; right:0; bottom:0;
+      background: radial-gradient(white 1px, transparent 1px);
+      background-size: 20px 20px;
       pointer-events: none;
+      z-index: 0;
     }
-
     .container {
-      position: relative;
-      z-index: 1;
       max-width: 1000px;
       margin: auto;
       padding: 20px;
+      z-index: 1;
+      position: relative;
     }
-
     .logo {
       display: block;
-      margin: 0 auto 20px auto;
-      width: 180px;
+      max-width: 180px;
+      margin: 20px auto;
     }
-
-    #searchInput {
-      display: block;
-      margin: 10px auto 20px auto;
+    .search {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .search input {
       width: 90%;
-      max-width: 400px;
-      padding: 10px;
+      max-width: 500px;
+      padding: 10px 15px;
       border-radius: 12px;
       border: none;
-      background: #111;
-      color: white;
       font-size: 16px;
+      outline: none;
     }
-
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 15px;
     }
-
     .card {
+      position: relative;
       background: #111;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
     }
-
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 4px 15px rgba(255,255,255,0.2);
     }
-
     .card img {
       width: 100%;
-      height: 140px;
+      height: 150px;
       object-fit: cover;
       display: block;
     }
-
     .card-body {
-      padding: 5px 10px;
-      background: #000;
+      padding: 8px;
+      background: rgba(0,0,0,0.8);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .card-body .info {
+    .card-body .text {
       display: flex;
       flex-direction: column;
     }
-
-    .name {
-      font-size: 14px;
+    .card-body .name {
       font-weight: bold;
-      color: white;
-    }
-
-    .price {
       font-size: 14px;
+    }
+    .card-body .price {
+      color: #00ff7f;
       font-weight: bold;
-      color: #39ff14;
+      font-size: 13px;
     }
-
-    .arrow {
-      font-size: 16px;
+    .card-body .arrow {
+      font-size: 18px;
       color: white;
-    }
-
-    @media(max-width: 500px){
-      .grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-
-      .card img {
-        height: 120px;
-      }
+      margin-left: 5px;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <img src="https://i.imgur.com/wMhd6LV.jpeg" alt="Logo ADZM Finds" class="logo">
 
-<canvas id="stars"></canvas>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
+    </div>
 
-<div class="container">
-  <img class="logo" src="https://i.imgur.com/wMhd6LV.jpeg" alt="Logo ADZM">
+    <div class="grid" id="articleGrid"></div>
+  </div>
 
-  <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
+  <script>
+    let articles = [];
 
-  <div class="grid" id="articleGrid"></div>
-</div>
+    function addArticle(name, price, image, link) {
+      articles.push({ name, price: Number(price).toFixed(2), image, link });
+      renderArticles();
+    }
 
-<script>
-  // étoiles aléatoires
-  const canvas = document.getElementById("stars");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const stars = [];
-  for(let i=0;i<150;i++){
-    stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5});
-  }
-  function drawStars(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    stars.forEach(s=>{
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle="white";
-      ctx.fill();
-    });
-    requestAnimationFrame(drawStars);
-  }
-  drawStars();
-  window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
+    function renderArticles() {
+      const grid = document.getElementById('articleGrid');
+      const filter = document.getElementById('searchInput').value.toLowerCase();
+      grid.innerHTML = '';
 
-  // articles
-  let articles = [];
+      articles
+        .filter(a => a.name.toLowerCase().includes(filter))
+        .forEach(article => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.onclick = () => window.open(article.link, '_blank');
 
-  function addArticle(name, price, image, link){
-    articles.push({name, price, image, link});
-    renderArticles();
-  }
-
-  function renderArticles(){
-    const grid = document.getElementById('articleGrid');
-    const filter = document.getElementById('searchInput').value.toLowerCase();
-    grid.innerHTML = '';
-    articles
-      .filter(a=>a.name.toLowerCase().includes(filter))
-      .forEach(a=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = ()=>window.open(a.link,'_blank');
-        card.innerHTML = `
-          <img src="${a.image}" alt="${a.name}">
-          <div class="card-body">
-            <div class="info">
-              <div class="name">${a.name}</div>
-              <div class="price">${a.price} €</div>
+          card.innerHTML = `
+            <img src="${article.image}" alt="${article.name}">
+            <div class="card-body">
+              <div class="text">
+                <div class="name">${article.name}</div>
+                <div class="price">${article.price} €</div>
+              </div>
+              <div class="arrow">➡️</div>
             </div>
-            <div class="arrow">➔</div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-  }
+          `;
+          grid.appendChild(card);
+        });
+    }
 
-  // test avec 2 articles
-  addArticle("Pull Nike Tech", 16.00, "https://i.imgur.com/glqnO1W.jpeg", "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("T-shirt CDG", 10.00, "https://i.imgur.com/wMhd6LV.jpeg", "#");
+    // AJOUT DES ARTICLES
+    addArticle(
+      "Pull Nike Tech",
+      16.00,
+      "https://i.imgur.com/glqnO1W.jpeg",
+      "https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA"
+    );
+    addArticle(
+      "T-shirt Running Nike",
+      5.00,
+      "https://i.imgur.com/C43E1rN.jpeg",
+      "https://hipobuy.com/pages/goods/details?channelId=1688&inviteCode=E6EMQHWWA"
+    );
 
-</script>
+  </script>
 </body>
 </html>
