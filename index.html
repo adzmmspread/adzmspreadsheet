@@ -235,5 +235,32 @@
   addArticle("Yezzy 700 v3",40.00,"https://cdn2.hipobuy.com/prod/order/D2601120257814173/checkPhotos/20260118/processed_19baac3f-1257-4149-9a0e-0bd869a1b723_w.webp","https://hipobuy.com/pages/goods/details?id=7619848148&channel=WEIDIAN&inviteCode=E6EMQHWWA");
 
 </script>
+  <script>
+fetch("articles.json")
+  .then(res => res.json())
+  .then(articles => {
+    const grid = document.getElementById("articleGrid");
+
+    articles.forEach(a => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.onclick = () => window.open(a.link, "_blank");
+
+      card.innerHTML = `
+        <img src="${a.image}" alt="${a.name}">
+        <div class="card-body">
+          <div class="text">
+            <div class="name">${a.name}</div>
+            <div class="price">${a.price} €</div>
+          </div>
+          <div class="card-arrow">➡️</div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+  });
+  </script>
 </body>
 </html>
+
