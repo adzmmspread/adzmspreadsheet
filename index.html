@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADZM Finds</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -59,7 +59,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
 
@@ -128,139 +128,42 @@
   <img src="https://i.imgur.com/wMhd6LV.jpeg" alt="Logo ADZM Finds" class="logo">
 
   <div class="search">
-    <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()">
   </div>
 
-  <div class="grid" id="articleGrid"></div>
+  <div class="grid" id="products"></div>
 </div>
 
+<script src="articles.js"></script>
 <script>
-  // STAR ANIMATION
-  const canvas = document.getElementById('stars');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function renderArticles() {
+  const grid = document.getElementById('products');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  grid.innerHTML = '';
 
-  let stars = [];
-  for(let i=0;i<200;i++){
-    stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, d:Math.random()*0.5+0.1});
-  }
-
-  function drawStars(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='white';
-    ctx.beginPath();
-    stars.forEach(s=>{
-      ctx.moveTo(s.x,s.y);
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    });
-    ctx.fill();
-    moveStars();
-    requestAnimationFrame(drawStars);
-  }
-
-  function moveStars(){
-    stars.forEach(s=>{
-      s.y += s.d;
-      if(s.y > canvas.height){ s.y=0; s.x=Math.random()*canvas.width; }
-    });
-  }
-
-  drawStars();
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-
-  // ARTICLES
-  let articles = [];
-
-  function addArticle(name, price, image, link){
-    articles.push({name, price:Number(price).toFixed(2), image, link});
-    renderArticles();
-  }
-
-  function renderArticles(){
-    const grid = document.getElementById('articleGrid');
-    const filter = document.getElementById('searchInput').value.toLowerCase();
-    grid.innerHTML = '';
-    articles
-      .filter(a=>a.name.toLowerCase().includes(filter))
-      .forEach(a=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = ()=>window.open(a.link,'_blank');
-
-        const bgOpacity = (Math.random()*0.2 + 0.7).toFixed(2); // variation fond texte
-        card.innerHTML = `
-          <img src="${a.image}" alt="${a.name}">
-          <div class="card-body">
-            <div class="text" style="background: rgba(0,0,0,${bgOpacity});">
-              <div class="name">${a.name}</div>
-              <div class="price">${a.price} €</div>
-            </div>
-            <div class="card-arrow">➡️</div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-  }
-
-  // AJOUT DES ARTICLES
-  addArticle("Pull Nike Tech",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=987561116919&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Pull Nike Trail",16.00,"https://cdn2.hipobuy.com/prod/order/D2601120671641701/checkPhotos/20260116/processed_9cea41b4-5cd2-480b-950b-c3cd7226cdf8_w.webp","https://hipobuy.com/pages/goods/details?id=7549390543&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Therma fit verte sans manche",19.00,"https://cdn2.hipobuy.com/prod/order/D2601120465853267/checkPhotos/20260117/processed_11c9ec3b-8c94-4c5c-99d7-afd8b1aee53c_w.webp","https://hipobuy.com/pages/goods/details?id=7610197237&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Therma-fit noire",23.00,"https://cdn2.hipobuy.com/prod/order/D2601150272381308/checkPhotos/20260118/processed_d538aba6-53db-478c-a9e0-c0cbfc93b9ce_w.webp","https://hipobuy.com/pages/goods/details?id=990993570840&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Running nike essentiel",20.00,"https://cdn2.hipobuy.com/prod/order/D2510121784696573/checkPhotos/20251016/processed_29fae3a9-222e-4993-ac3e-47ed980a5fdf_w.webp","https://hipobuy.com/pages/goods/details?id=628181742021&channel=TAOBAO&inviteCode=E6EMQHWWA");
-  addArticle("Veste nike running",12.00,"https://cdn2.hipobuy.com/prod/order/D2601120670603091/checkPhotos/20260116/processed_7cbfdbaa-5231-4035-8f80-b1000a232001_w.webp","https://hipobuy.com/pages/goods/details?id=941585275771&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Chaussettes nike",0.40,"https://cdn2.hipobuy.com/prod/order/D2601160529214494/checkPhotos/20260118/processed_a3fcf3ab-140e-4757-8306-6047e9d0910d_w.webp","https://hipobuy.com/pages/goods/details?id=870117351797&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Gants nike",5.00,"https://cdn2.hipobuy.com/prod/order/D2601110833682886/checkPhotos/20260115/processed_21cc5281-8cec-46d2-aff2-b5437819bf7b_w.webp","https://hipobuy.com/pages/goods/details?id=908715264109&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Cagoule nike",2.00,"https://cdn2.hipobuy.com/prod/order/D2601150787671179/checkPhotos/20260118/processed_73638d3f-6baf-4405-ac17-d70c3b004313_w.webp","https://hipobuy.com/pages/goods/details?id=981512627669&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Veste nike division rouge",27.00,"https://cdn2.hipobuy.com/prod/order/D2601101795978400/checkPhotos/20260116/processed_240924be-6909-493f-9a7c-be61f382685a_w.webp","https://hipobuy.com/pages/goods/details?id=7590761023&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Demi-zip nike trail",16.00,"https://cdn2.hipobuy.com/prod/order/D2601120052493608/checkPhotos/20260115/processed_6060feae-e391-4ec6-818e-9caa7e66419f_w.webp","https://hipobuy.com/pages/goods/details?id=7630008027&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Pull tokyo running",19.00,"https://cdn2.hipobuy.com/prod/order/D2601090961413720/checkPhotos/20260115/processed_07e32dba-14f2-4877-b158-e841d270ddb1_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7629809614&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticle("Running nike tokyo v1",19.00,"https://cdn2.hipobuy.com/prod/order/D2601120671128575/checkPhotos/20260118/processed_903e2321-d65a-46e4-895b-6037ca025e00_w.webp","https://hipobuy.com/pages/goods/details?id=7643925203&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Maillot psg 25-26",14.00,"https://cdn2.hipobuy.com/prod/order/D2512271898906633/checkPhotos/20260101/processed_94ace29f-dd55-4f58-ba53-8355013277c3_w.webp","https://hipobuy.com/pages/goods/details?spuNo=940606262535&channel=1&inviteCode=E6EMQHWWA");
-  addArticle("Pull nike trail montagne",18.00,"https://cdn2.hipobuy.com/prod/order/D2601120260244503/checkPhotos/20260118/processed_9cad959f-98ae-4172-b4c7-e2705d84568d_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7606245819&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticle("Nike aeroswift",15.00,"https://cdn2.hipobuy.com/prod/order/D2601160218005153/checkPhotos/20260118/processed_276c29d3-bcfe-48d4-8879-611fc143130c_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7540536587&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticle("Bas running hybride under",16.00,"https://cdn2.hipobuy.com/prod/order/D2601121377299316/checkPhotos/20260115/processed_e8d38fe0-434b-4ab0-a41c-6b1c44ca004e_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7619494720&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticle("Haut nike tech gris 2 poches",20.00,"https://cdn2.hipobuy.com/prod/order/D2512111978174943/checkPhotos/20251216/processed_8190f910-e364-4452-a1d1-611c9dd82899_w.webp","https://hipobuy.com/pages/goods/details?channelId=weidian&spuNo=7542253414&inviteCode=E6EMQHWWA");
-  addArticle("Maillot de foot divers 25-26",4.00,"https://cdn2.hipobuy.com/prod/order/D2512200712121744/checkPhotos/20251224/processed_ba1622cf-c96f-4547-aa1f-af1229428d06_w.webp","https://hipobuy.com/pages/goods/details?id=895622213007&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Nike phenom elite (de QWQ)",21.00,"https://cdn2.hipobuy.com/prod/order/D2601140338894432/checkPhotos/20260117/processed_7325e8cc-0594-4b11-8758-456338ff5704_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7646763614&channel=weidian&inviteCode=E6EMQHWWA");
-  addArticle("Veste nike trail windrunner noire",26.00,"https://cdn2.hipobuy.com/prod/order/D2601150584437804/checkPhotos/20260118/processed_9b0aefb7-058c-40cf-b706-9b1d73324e36_w.webp","https://hipobuy.com/pages/goods/details?id=997439358804&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Haut running zabuza",17.00,"https://cdn2.hipobuy.com/prod/order/D2601130499537327/checkPhotos/20260116/processed_0a3cd025-faac-48ca-9d22-7b9c0f994023_w.webp","https://hipobuy.com/pages/goods/details?id=984670446031&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Veste canada goose",52.00,"https://cdn2.hipobuy.com/prod/order/D2601070375558950/checkPhotos/20260110/processed_40e646a2-9df6-41da-afad-c26d25d2619a_w.webp","https://hipobuy.com/pages/goods/details?id=737855341853&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Pantalon asics",17.00,"https://cdn2.hipobuy.com/prod/order/D2512290443942245/checkPhotos/20251231/processed_1bcb1aba-7647-4cff-8ef5-1267635e15dd_w.webp","https://hipobuy.com/pages/goods/details?id=7643196791&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  addArticle("Yezzy 700 v3",40.00,"https://cdn2.hipobuy.com/prod/order/D2601120257814173/checkPhotos/20260118/processed_19baac3f-1257-4149-9a0e-0bd869a1b723_w.webp","https://hipobuy.com/pages/goods/details?id=7619848148&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-
-</script>
-  <script>
-fetch("articles.json")
-  .then(res => res.json())
-  .then(articles => {
-    const grid = document.getElementById("articleGrid");
-
-    articles.forEach(a => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.onclick = () => window.open(a.link, "_blank");
-
-      card.innerHTML = `
-        <img src="${a.image}" alt="${a.name}">
-        <div class="card-body">
-          <div class="text">
-            <div class="name">${a.name}</div>
-            <div class="price">${a.price} €</div>
-          </div>
-          <div class="card-arrow">➡️</div>
+  const filtered = articles.filter(a => a.name.toLowerCase().includes(search));
+  
+  filtered.forEach(article => {
+    const card = document.createElement('a');
+    card.href = article.link;
+    card.target = '_blank';
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${article.img}" alt="${article.name}">
+      <div class="card-body">
+        <div class="text">
+          <div class="name">${article.name}</div>
+          <div class="price">${article.price}€</div>
         </div>
-      `;
-
-      grid.appendChild(card);
-    });
+        <div class="card-arrow">↗</div>
+      </div>
+    `;
+    grid.appendChild(card);
   });
-  </script>
+}
+
+// Initial render
+renderArticles();
+</script>
 </body>
 </html>
-
