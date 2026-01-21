@@ -10,11 +10,11 @@
         padding: 0;
         font-family: monospace;
         background: black;
-        overflow-x: hidden;
         color: white;
+        overflow-x: hidden;
     }
 
-    /* Fond animé */
+    /* Fond animé étoiles */
     #stars {
         position: fixed;
         width: 100%;
@@ -57,7 +57,7 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 20px;
-        padding: 0 10px;
+        padding: 0 10px 40px 10px;
     }
 
     .product-card {
@@ -68,6 +68,12 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         text-align: center;
         font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
     }
 
     .product-card img {
@@ -77,11 +83,12 @@
 
     .product-name {
         padding: 5px;
+        color: white;
     }
 
     .product-price {
         padding: 5px;
-        color: #00ff00; /* prix en vert */
+        color: #00ff00; /* prix vert */
         font-weight: bold;
     }
 </style>
@@ -98,7 +105,7 @@
 
 <script src="articles.js"></script>
 <script>
-    // animation étoiles aléatoire
+    // Génération des étoiles
     const stars = document.getElementById('stars');
     for (let i = 0; i < 100; i++) {
         let star = document.createElement('div');
@@ -110,7 +117,7 @@
         stars.appendChild(star);
     }
 
-    // affichage articles
+    // Affichage des produits
     const productsDiv = document.getElementById('products');
     function showProducts(list) {
         productsDiv.innerHTML = '';
@@ -129,7 +136,7 @@
 
     showProducts(articles);
 
-    // recherche
+    // Filtre recherche
     const searchBox = document.getElementById('searchBox');
     searchBox.addEventListener('input', () => {
         const filtered = articles.filter(a => a.name.toLowerCase().includes(searchBox.value.toLowerCase()));
