@@ -237,6 +237,66 @@
   </a>
 </div>
 <!-- ===== FIN BOUTONS ======= -->
+  <!-- ONGLETS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('articles')">Articles</button>
+  <button class="tab-btn" onclick="showTab('vendeurs')">Vendeurs</button>
+</div>
+
+<!-- CONTENUS DES ONGLETS -->
+<div id="articles" class="tab-content">
+  <div class="grid" id="articleGrid"></div> <!-- ton script articles reste inchangé -->
+</div>
+
+<div id="vendeurs" class="tab-content" style="display:none;">
+  <div class="grid" id="vendeurGrid"></div> <!-- nouvelle grille pour les vendeurs -->
+</div>
+
+<script>
+  // Fonction onglets
+  function showTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(t => t.style.display = 'none');
+    document.getElementById(tabName).style.display = 'block';
+
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  // Vendeurs
+  let vendeurs = [];
+
+  function addVendeur(name, image, link){
+    vendeurs.push({name, image, link});
+    renderVendeurs();
+  }
+
+  function renderVendeurs(){
+    const grid = document.getElementById('vendeurGrid');
+    grid.innerHTML = '';
+    vendeurs.forEach(v=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = ()=>window.open(v.link,'_blank');
+      card.innerHTML = `
+        <img src="${v.image}" alt="${v.name}">
+        <div class="card-body">
+          <div class="text">
+            <div class="name">${v.name}</div>
+          </div>
+          <div class="card-arrow">➡️</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // Exemple d'ajout de vendeurs
+  addVendeur("Lightning (vendeur de running)", "https://photo.yupoo.com/lightningrun/2d4a32ab/e10cded1.jpg", "https://lightningrun.x.yupoo.com/albums");
+  addVendeur("Yolo66 (vendeur de paires)", "https://photo.yupoo.com/yolo66/549f3415/cc45800f.jpg", "https://yolo66.x.yupoo.com/");
+  addVendeur("Huskyreps (vendeur de nike tech, etc..)", "https://i.imgur.com/9mogiCx.jpeg", "https://huskyreps.x.yupoo.com/");
+</script>
 <div class="grid" id="articleGrid"></div>
 
 <footer class="footer">
@@ -471,6 +531,7 @@ addArticle("Veste division rouge",24,"https://cdn2.hipobuy.com/prod/order/D26020
 </script>
 </body>
 </html>
+
 
 
 
