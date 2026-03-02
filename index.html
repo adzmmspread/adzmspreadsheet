@@ -342,6 +342,12 @@ document.getElementById('searchInput').addEventListener('keyup', () => {
   } else if(currentTab === 'vendeurs'){
       renderVendeurs();
   }
+}); document.getElementById('searchInput').addEventListener('keyup', () => {
+  if(currentTab === 'articles'){
+      renderArticles();
+  } else if(currentTab === 'vendeurs'){
+      renderVendeurs();
+  }
 });
   // Exemple d'ajout de vendeurs
   addVendeur("Lightning (running)", "https://i.imgur.com/JhLK8Qo.jpeg", "https://lightningrun.x.yupoo.com/albums");
@@ -585,6 +591,7 @@ addArticle("Nike tech kangourou noir et gris (je conseille pas vraiment le gris)
 </script>
 </body>
 </html>
+
 
 
 
