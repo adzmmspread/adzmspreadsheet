@@ -286,12 +286,14 @@
 </div>
 
 <script>
+  let currentTab = 'articles';
   function toggleMenu(){
   const menu = document.getElementById('hamburgerMenu');
   menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
   // Fonction onglets
   function showTab(tabName) {
+    currentTab = tabName; // <- met à jour l'onglet actif
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(t => t.style.display = 'none');
     document.getElementById(tabName).style.display = 'block';
@@ -307,6 +309,13 @@
   function addVendeur(name, image, link){
     vendeurs.push({name, image, link});
     renderVendeurs();
+    document.getElementById('searchInput').addEventListener('keyup', () => {
+    if(currentTab === 'articles'){
+        renderArticles();
+    } else if(currentTab === 'vendeurs'){
+        renderVendeurs();
+    }
+});
   }
 
   function renderVendeurs(){
@@ -571,6 +580,7 @@ addArticle("Veste division rouge",24,"https://cdn2.hipobuy.com/prod/order/D26020
 </script>
 </body>
 </html>
+
 
 
 
