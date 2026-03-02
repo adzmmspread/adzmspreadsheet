@@ -250,7 +250,6 @@
 <header class="header">
   <div class="logo">ADZM Finds</div>
   <div class="search">
-    <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
   </div>
   <div class="menu-hamburger" onclick="toggleMenu()">
   &#9776;
@@ -337,7 +336,13 @@
       grid.appendChild(card);
     });
   }
-
+document.getElementById('searchInput').addEventListener('keyup', () => {
+  if(currentTab === 'articles'){
+      renderArticles();
+  } else if(currentTab === 'vendeurs'){
+      renderVendeurs();
+  }
+});
   // Exemple d'ajout de vendeurs
   addVendeur("Lightning (running)", "https://i.imgur.com/JhLK8Qo.jpeg", "https://lightningrun.x.yupoo.com/albums");
   addVendeur("Yolo66 (paires)", "https://image2url.com/r2/default/images/1772487444358-61caa19a-1d57-4c39-8b66-98422e153246.jpg", "https://yolo66.x.yupoo.com/");
@@ -580,6 +585,7 @@ addArticle("Veste division rouge",24,"https://cdn2.hipobuy.com/prod/order/D26020
 </script>
 </body>
 </html>
+
 
 
 
