@@ -252,15 +252,6 @@
   <div class="search">
     <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
   </div>
-  <div class="search">
-  <input type="text" id="searchInput" placeholder="🔍 Rechercher un article..." onkeyup="renderArticles()" />
-  <select id="sortSelect" onchange="sortArticles()">
-    <option value="recent">Plus récents</option>
-    <option value="old">Plus anciens</option>
-    <option value="priceLow">Prix croissant</option>
-    <option value="priceHigh">Prix décroissant</option>
-  </select>
-  </div>
   <div class="menu-hamburger" onclick="toggleMenu()">
   &#9776;
   </div>
@@ -424,9 +415,9 @@
   // ARTICLES
   let articles = [];
 
-  function addArticle(name,price,image,link){
-  articles.push({name,price,image,link,date:Date.now()});
-  renderArticles();
+  function addArticle(name, price, image, link){
+    articles.push({name, price:Number(price).toFixed(2), image, link});
+    renderArticles();
   }
 
   function renderArticles(){
@@ -436,28 +427,6 @@
     articles
       .filter(a=>a.name.toLowerCase().includes(filter))
       .forEach(a=>{
-        function sortArticles(){
-
-  const sort = document.getElementById("sortSelect").value;
-
-  if(sort === "recent"){
-    articles.sort((a,b)=>b.date-a.date);
-  }
-
-  if(sort === "old"){
-    articles.sort((a,b)=>a.date-b.date);
-  }
-
-  if(sort === "priceLow"){
-    articles.sort((a,b)=>a.price-b.price);
-  }
-
-  if(sort === "priceHigh"){
-    articles.sort((a,b)=>b.price-a.price);
-  }
-
-  renderArticles();
-        }
         const card = document.createElement('div');
         card.className = 'card';
         card.onclick = ()=>window.open(a.link,'_blank');
@@ -624,48 +593,3 @@ addArticle("Phenom elite tokyo 3 gouttes",19,"https://i.imgur.com/gMxKjKE.jpeg",
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
