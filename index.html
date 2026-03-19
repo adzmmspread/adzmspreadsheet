@@ -5,20 +5,12 @@
   <title>ADZM Finds</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <meta property="og:title" content="Adzm Running Spreadsheet">
-  <meta property="og:description" content="Appuie sur ce lien pour avoir le meilleur spreadsheet running de 2026 ! (Nike, Underarmour, Asics, etc..)">
-  <meta property="og:image" content="https://i.imgur.com/ydNQ5vp.png">
-  <meta property="og:url" content="https://tonsite.com">
-  <meta property="og:type" content="website">
-
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      /* Mélange Image Myra + Galaxy */
-      --bg-deep: #030816; 
-      --bg-gradient: radial-gradient(circle at center, #0a1a2e 0%, #030816 100%);
-      --bg-card: rgba(10, 26, 46, 0.7);
+      /* Palette Galaxy & Myra */
+      --bg-deep: #02040a; 
       --accent-blue: #00d1ff; 
       --border: rgba(0, 209, 255, 0.2);
       --text-main: #ffffff;
@@ -28,22 +20,38 @@
     body {
       margin: 0; padding: 0;
       font-family: 'Montserrat', sans-serif;
-      background: var(--bg-deep);
-      background-image: var(--bg-gradient);
+      background-color: var(--bg-deep);
       color: var(--text-main);
       overflow-x: hidden;
       min-height: 100vh;
     }
 
+    /* EFFET GALAXIE FOND */
+    #galaxy-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle at 50% 50%, #0a1a2e 0%, #02040a 100%);
+      overflow: hidden;
+    }
+
+    /* Nébuleuses */
+    .nebula {
+      position: absolute; width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(0, 209, 255, 0.08) 0%, rgba(10, 26, 46, 0) 70%);
+      filter: blur(80px);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
     canvas#stars {
-      position: fixed; top:0; left:0; width:100%; height:100%; z-index:0;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     }
 
     /* HEADER */
     .header {
       position: sticky; top:0;
-      background: rgba(3, 8, 22, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(2, 4, 10, 0.8);
+      backdrop-filter: blur(15px);
       display: flex; justify-content: space-between; align-items: center;
       padding: 15px 25px;
       border-bottom: 1px solid var(--border);
@@ -53,99 +61,78 @@
     .logo { font-weight: 800; font-size: 22px; color: var(--text-main); letter-spacing: 1px; }
     .logo span { color: var(--accent-blue); }
 
-    /* FILTRES & RECHERCHE */
-    .controls-container {
-      padding: 20px 25px 5px;
-      display: flex; flex-wrap: wrap; gap: 10px;
-      position: relative; z-index: 2;
-      max-width: 1200px; margin: auto;
-    }
+    /* BANNER & CONTROLS */
+    .banner { text-align: center; padding: 15px; z-index: 2; position: relative; }
+    .banner .main-title { color: var(--accent-blue); font-weight: 800; font-size: 14px; }
+    .banner .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; margin-top: 5px; display: block; }
 
+    .controls-container {
+      padding: 20px 25px 5px; display: flex; flex-wrap: wrap; gap: 10px;
+      position: relative; z-index: 2; max-width: 1200px; margin: auto;
+    }
     .search { flex: 2; min-width: 200px; }
     .search input {
       width: 100%; padding: 12px 18px; border-radius: 10px;
       border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-      color: white; font-size: 15px; outline: none; transition: 0.3s;
+      color: white; outline: none; transition: 0.3s;
     }
-    .search input:focus { border-color: var(--accent-blue); background: rgba(255,255,255,0.1); }
+    .search input:focus { border-color: var(--accent-blue); }
 
-    .sort-select {
-      flex: 1; min-width: 140px; padding: 12px; border-radius: 10px;
-      background: #0a1a2e; color: white; border: 1px solid var(--border);
-      cursor: pointer; outline: none;
-    }
-
-    /* BANNER */
-    .banner {
-      text-align: center; padding: 15px;
-      z-index: 2; position: relative;
-    }
-    .banner .main-title { color: var(--accent-blue); font-weight: 800; font-size: 14px; letter-spacing: 1px; }
-    .banner .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; margin-top: 5px; display: block; opacity: 0.8; }
-
-    /* GRID & CARDS */
+    /* CARDS APLATIES (RECTANGLE) */
     .grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 15px; padding: 15px;
-      z-index:1; position: relative;
+      gap: 15px; padding: 15px; z-index:1; position: relative;
       max-width: 1200px; margin: auto;
     }
-
     .card {
-      background: var(--bg-card); border-radius: 12px;
-      overflow: hidden; cursor: pointer;
-      border: 1px solid var(--border);
-      transition: 0.3s ease;
-      backdrop-filter: blur(5px);
+      background: rgba(10, 26, 46, 0.5); border-radius: 12px;
+      overflow: hidden; border: 1px solid var(--border);
+      transition: 0.3s ease; backdrop-filter: blur(5px);
     }
-    .card:hover { transform: translateY(-4px); border-color: var(--accent-blue); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent-blue); }
+    .card img { width: 100%; height: 135px; object-fit: cover; } /* Image aplatie */
     
-    /* Image aplatie pour format rectangle */
-    .card img { 
-      width: 100%; 
-      height: 140px; /* Hauteur réduite pour aplatir */
-      object-fit: cover; 
-    }
-
     .card-body { padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .card-body .name { font-weight: 600; font-size: 13px; color: #eee; }
-    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 14px; display: block; }
-    .card-arrow { color: var(--accent-blue); font-size: 16px; }
+    .card-body .name { font-weight: 600; font-size: 13px; }
+    .card-body .price { color: var(--accent-blue); font-weight: 800; }
 
-    /* POPUP DESIGN GALAXY */
+    /* POPUP STYLE ANCIEN */
     .hipo-overlay { 
       position: fixed; inset: 0; backdrop-filter: blur(10px); 
-      background: rgba(0,0,0,0.8); display: flex; 
+      background: rgba(0,0,0,0.8); display: none; 
       align-items: center; justify-content: center; z-index: 9999; 
     }
     .hipo-popup { 
-      background: linear-gradient(145deg, #0a1a2e, #030816); 
-      color: white; width: 85%; max-width: 380px; padding: 35px 25px; 
-      border-radius: 20px; text-align: center; border: 1px solid var(--accent-blue);
-      position: relative; box-shadow: 0 0 30px rgba(0, 209, 255, 0.3);
+      background: #0a1a2e; color: white; width: 85%; max-width: 350px; 
+      padding: 30px 20px; border-radius: 15px; text-align: center; 
+      border: 1px solid var(--accent-blue); position: relative;
     }
     .hipo-btn { 
-      display: block; margin: 20px auto 0; padding: 15px; border-radius: 10px; 
-      font-weight: 800; text-decoration: none; 
-      background: var(--accent-blue); color: #000; transition: 0.3s; 
+      display: inline-block; margin-top: 15px; padding: 12px 30px; 
+      border-radius: 8px; font-weight: 800; text-decoration: none; 
+      background: #00d1ff; color: #000; font-size: 15px;
     }
-    .hipo-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; }
+    .hipo-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
 
-    /* MENU HAMBURGER */
+    /* MENU */
     .menu-hamburger { font-size: 26px; cursor: pointer; color: var(--accent-blue); }
     .hamburger-menu {
       position: fixed; top: 70px; right: 20px; background: #0a1a2e;
       border: 1px solid var(--border); border-radius: 12px; display: none;
       flex-direction: column; z-index: 1001;
     }
-    .hamburger-menu div { padding: 15px 25px; cursor: pointer; color: white; border-bottom: 1px solid var(--border); }
+    .hamburger-menu div { padding: 15px 25px; cursor: pointer; border-bottom: 1px solid var(--border); }
 
-    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } .card img { height: 180px; } }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } .card img { height: 170px; } }
   </style>
 </head>
 <body>
 
-<canvas id="stars"></canvas>
+<div id="galaxy-container">
+  <div class="nebula" style="top: -10%; left: -10%; background: radial-gradient(circle, rgba(0, 209, 255, 0.05) 0%, transparent 70%);"></div>
+  <div class="nebula" style="bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(138, 43, 226, 0.05) 0%, transparent 70%);"></div>
+  <canvas id="stars"></canvas>
+</div>
 
 <header class="header">
   <div class="logo">ADZM<span>.</span></div>
@@ -166,35 +153,23 @@
   <div class="search">
     <input type="text" id="searchInput" placeholder="Rechercher..." onkeyup="renderAll()" />
   </div>
-  <select id="sortOption" class="sort-select" onchange="renderAll()">
+  <select id="sortOption" class="sort-select" onchange="renderAll()" style="background:#0a1a2e; color:white; border-radius:10px; border:1px solid var(--border); padding:10px;">
     <option value="recent">Nouveautés</option>
     <option value="low">Prix croissant</option>
     <option value="high">Prix décroissant</option>
   </select>
 </div>
 
-<div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin:15px 0; z-index:2; position:relative;">
-  <a href="https://t.me/adzmhipofinds" target="_blank"><img src="https://i.imgur.com/UfVEL4w.png" style="width:45px;"></a>
-  <a href="https://www.tiktok.com/@addmmyz.zx?_r=1&_t=ZS-92zeJ29mQrw" target="_blank"><img src="https://i.imgur.com/w0MAvg6.png" style="width:45px;"></a>
-  <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank"><img src="https://i.imgur.com/6zUvchk.png" style="width:45px;"></a>
-  <a href="https://discord.gg/SyJjmfYxp" target="_blank"><img src="https://i.imgur.com/aj1aMEQ.png" style="width:45px;"></a>
-</div>
+<div id="articles" class="tab-content"><div class="grid" id="articleGrid"></div></div>
+<div id="vendeurs" class="tab-content" style="display:none;"><div class="grid" id="vendeurGrid"></div></div>
 
-<div id="articles" class="tab-content">
-  <div class="grid" id="articleGrid"></div>
-</div>
-
-<div id="vendeurs" class="tab-content" style="display:none;">
-  <div class="grid" id="vendeurGrid"></div>
-</div>
-
-<div id="hipoOverlay" class="hipo-overlay" style="display:none;">
+<div id="hipoOverlay" class="hipo-overlay">
   <div class="hipo-popup">
     <button class="hipo-close" onclick="closeHipo()">✕</button>
-    <h2 style="margin:0; font-size:22px;">Cadeau de bienvenue 🎁</h2>
-    <p style="color:var(--text-dim); font-size:14px; margin-top:10px;">S'inscrire sur Hipobuy pour bénéficier de coupons et réductions exclusives !</p>
-    <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">RÉCUPÉRER MES COUPONS</a>
-    <label style="display:block; margin-top:20px; font-size:11px; color:var(--text-dim); cursor:pointer;">
+    <h2>REJOINS HIPOBUY !</h2>
+    <p>S'inscrire sur Hipobuy pour bénéficier de coupons</p>
+    <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">S'INSCRIRE ICI</a>
+    <label style="display:block; margin-top:15px; font-size:11px; color:#888; cursor:pointer;">
       <input type="checkbox" id="hipoDontShow"> Ne plus afficher
     </label>
   </div>
@@ -210,20 +185,13 @@
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
 
-  // Effacer la barre de recherche lors du switch
   function switchTab(tabName) {
     currentTab = tabName;
     document.getElementById('searchInput').value = ''; // Efface la recherche
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
     document.getElementById(tabName).style.display = 'block';
-    document.getElementById('sortOption').style.display = (tabName === 'vendeurs') ? 'none' : 'block';
     toggleMenu();
     renderAll();
-  }
-
-  function renderAll() {
-    if(currentTab === 'articles') renderArticles();
-    else renderVendeurs();
   }
 
   function addArticle(name, price, image, link){
@@ -236,84 +204,60 @@
     const filter = document.getElementById('searchInput').value.toLowerCase();
     const sort = document.getElementById('sortOption').value;
     grid.innerHTML = '';
-    
     let filtered = articles.filter(a => a.name.toLowerCase().includes(filter));
     if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
     else if(sort === 'high') filtered.sort((a,b) => b.price - a.price);
     else filtered.sort((a,b) => b.id - a.id);
 
     filtered.forEach(a => {
-      grid.innerHTML += `
-        <div class="card" onclick="window.open('${a.link}','_blank')">
-          <img src="${a.image}" alt="${a.name}" loading="lazy">
-          <div class="card-body">
-            <div>
-              <span class="name">${a.name}</span>
-              <span class="price">${a.price.toFixed(2)} €</span>
-            </div>
-            <div class="card-arrow">→</div>
-          </div>
-        </div>`;
+      grid.innerHTML += `<div class="card" onclick="window.open('${a.link}','_blank')">
+        <img src="${a.image}">
+        <div class="card-body"><div><span class="name">${a.name}</span><br><span class="price">${a.price.toFixed(2)} €</span></div><div style="color:var(--accent-blue)">→</div></div>
+      </div>`;
     });
   }
 
-  function addVendeur(name, image, link){
-    vendeurs.push({name, image, link});
-    renderVendeurs();
-  }
-
-  function renderVendeurs(){
-    const grid = document.getElementById('vendeurGrid');
-    const filter = document.getElementById('searchInput').value.toLowerCase();
-    grid.innerHTML = '';
-    vendeurs.filter(v => v.name.toLowerCase().includes(filter)).forEach(v => {
-      grid.innerHTML += `
-        <div class="card" onclick="window.open('${v.link}','_blank')">
-          <img src="${v.image}" alt="${v.name}">
-          <div class="card-body">
-            <span class="name" style="font-size:12px;">${v.name}</span>
-            <div class="card-arrow">→</div>
-          </div>
-        </div>`;
-    });
-  }
-
-  // --- CONTENU ---
-  addArticle("Pull Nike Tech (je conseille pas trop le gris)",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
+  // Articles & Vendeurs
+  addArticle("Pull Nike Tech",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
   addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
-  addArticle("Bas Nike Trail",16.00,"https://cdn2.hipobuy.com/prod/order/D2601120671641701/checkPhotos/20260116/processed_9cea41b4-5cd2-480b-950b-c3cd7226cdf8_w.webp","https://hipobuy.com/pages/goods/details?id=7549390543&channel=WEIDIAN&inviteCode=E6EMQHWWA");
   addArticle("Ensemble nike tech gris", 23, "https://image2url.com/r2/default/gifs/1773864516556-14f62d6d-2f6a-48d2-a8b5-68da291cd93f.gif", "https://hipobuy.com/pages/goods/details?spuNo=931344771025&channel=0&inviteCode=E6EMQHWWA");
 
-  addVendeur("Aaajersey (maillots de foot)", "https://i.imgur.com/7oZ4kkL.png", "https://aaaajersey.x.yupoo.com/albums/");
-  addVendeur("Lightning (running)", "https://i.imgur.com/JhLK8Qo.jpeg", "https://lightningrun.x.yupoo.com/albums");
-  addVendeur("Yolo66 (paires)", "https://image2url.com/r2/default/images/1772487444358-61caa19a-1d57-4c39-8b66-98422e153246.jpg", "https://yolo66.x.yupoo.com/");
-
-  // POPUP LOGIC
   function closeHipo() {
     if(document.getElementById("hipoDontShow").checked) localStorage.setItem("hideHipo2026", "true");
     document.getElementById("hipoOverlay").style.display = "none";
   }
 
-  // STARS
+  // ANIMATION ETOILES SCINTILLANTES
   const canvas = document.getElementById('stars');
   const ctx = canvas.getContext('2d');
   let stars = [];
   function initStars() {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     stars = [];
-    for(let i=0;i<180;i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, d:Math.random()*0.4});
+    for(let i=0; i<200; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5,
+        opacity: Math.random(),
+        speed: Math.random() * 0.02
+      });
+    }
   }
-  function drawStars(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#fff'; ctx.beginPath();
-    stars.forEach(s=>{ ctx.moveTo(s.x,s.y); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); s.y+=s.d; if(s.y>canvas.height) s.y=0; });
-    ctx.fill(); requestAnimationFrame(drawStars);
+  function drawStars() {
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    stars.forEach(s => {
+      ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(s.opacity))})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill();
+      s.opacity += s.speed;
+    });
+    requestAnimationFrame(drawStars);
   }
 
   window.onload = () => {
     initStars(); drawStars();
     if(localStorage.getItem("hideHipo2026") !== "true") {
-      setTimeout(() => { document.getElementById("hipoOverlay").style.display = "flex"; }, 2000);
+      setTimeout(() => { document.getElementById("hipoOverlay").style.display = "flex"; }, 1500);
     }
   };
 </script>
