@@ -9,139 +9,112 @@
   
   <style>
     :root {
-      /* Palette Galaxy & Myra */
-      --bg-deep: #02040a; 
+      --bg-deep: #050a1f; 
       --accent-blue: #00d1ff; 
       --border: rgba(0, 209, 255, 0.2);
       --text-main: #ffffff;
-      --text-dim: #94a3b8;
+      --galaxy-purple: #2d005e;
+      --galaxy-blue: #001a3d;
     }
 
     body {
       margin: 0; padding: 0;
       font-family: 'Montserrat', sans-serif;
-      background-color: var(--bg-deep);
+      /* DESIGN GALAXY BLEU-VIOLET */
+      background: linear-gradient(135deg, var(--bg-deep) 0%, var(--galaxy-purple) 50%, var(--galaxy-blue) 100%);
+      background-attachment: fixed;
       color: var(--text-main);
       overflow-x: hidden;
       min-height: 100vh;
     }
 
-    /* EFFET GALAXIE FOND */
-    #galaxy-container {
+    /* EFFET DE NÉBULEUSE SANS POINTS */
+    .nebula-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0;
-      background: radial-gradient(circle at 50% 50%, #0a1a2e 0%, #02040a 100%);
-      overflow: hidden;
-    }
-
-    /* Nébuleuses */
-    .nebula {
-      position: absolute; width: 800px; height: 800px;
-      background: radial-gradient(circle, rgba(0, 209, 255, 0.08) 0%, rgba(10, 26, 46, 0) 70%);
-      filter: blur(80px);
-      border-radius: 50%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 209, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.2) 0%, transparent 50%);
       pointer-events: none;
-    }
-
-    canvas#stars {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
     }
 
     /* HEADER */
     .header {
-      position: sticky; top:0;
-      background: rgba(2, 4, 10, 0.8);
-      backdrop-filter: blur(15px);
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 25px;
-      border-bottom: 1px solid var(--border);
-      z-index: 1000;
+      position: sticky; top:0; background: rgba(5, 10, 31, 0.85);
+      backdrop-filter: blur(15px); display: flex; justify-content: space-between; 
+      align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--border); z-index: 1000;
     }
-
-    .logo { font-weight: 800; font-size: 22px; color: var(--text-main); letter-spacing: 1px; }
+    .logo { font-weight: 800; font-size: 22px; letter-spacing: 1px; }
     .logo span { color: var(--accent-blue); }
 
-    /* BANNER & CONTROLS */
     .banner { text-align: center; padding: 15px; z-index: 2; position: relative; }
     .banner .main-title { color: var(--accent-blue); font-weight: 800; font-size: 14px; }
     .banner .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; margin-top: 5px; display: block; }
 
+    /* CONTROLS */
     .controls-container {
-      padding: 20px 25px 5px; display: flex; flex-wrap: wrap; gap: 10px;
+      padding: 10px 25px; display: flex; flex-wrap: wrap; gap: 10px;
       position: relative; z-index: 2; max-width: 1200px; margin: auto;
     }
     .search { flex: 2; min-width: 200px; }
     .search input {
-      width: 100%; padding: 12px 18px; border-radius: 10px;
-      border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-      color: white; outline: none; transition: 0.3s;
+      width: 100%; padding: 12px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.08);
+      color: white; outline: none; border: 1px solid var(--border);
     }
-    .search input:focus { border-color: var(--accent-blue); }
+    .sort-select {
+      background: #0a1a2e; color: white; border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px; cursor: pointer;
+    }
 
-    /* CARDS APLATIES (RECTANGLE) */
+    /* GRID & CARDS APLATIES */
     .grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
       gap: 15px; padding: 15px; z-index:1; position: relative;
       max-width: 1200px; margin: auto;
     }
     .card {
-      background: rgba(10, 26, 46, 0.5); border-radius: 12px;
+      background: rgba(10, 26, 46, 0.6); border-radius: 12px;
       overflow: hidden; border: 1px solid var(--border);
-      transition: 0.3s ease; backdrop-filter: blur(5px);
+      transition: 0.3s; backdrop-filter: blur(10px);
     }
     .card:hover { transform: translateY(-4px); border-color: var(--accent-blue); }
-    .card img { width: 100%; height: 135px; object-fit: cover; } /* Image aplatie */
+    .card img { width: 100%; height: 130px; object-fit: cover; } /* APLATIE */
     
     .card-body { padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .card-body .name { font-weight: 600; font-size: 13px; }
-    .card-body .price { color: var(--accent-blue); font-weight: 800; }
+    .card-body .name { font-weight: 600; font-size: 12px; }
+    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 14px; }
 
-    /* POPUP STYLE ANCIEN */
+    /* POPUP ANCIEN STYLE CYAN */
     .hipo-overlay { 
-      position: fixed; inset: 0; backdrop-filter: blur(10px); 
-      background: rgba(0,0,0,0.8); display: none; 
-      align-items: center; justify-content: center; z-index: 9999; 
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+      display: none; align-items: center; justify-content: center; z-index: 9999; 
     }
     .hipo-popup { 
       background: #0a1a2e; color: white; width: 85%; max-width: 350px; 
-      padding: 30px 20px; border-radius: 15px; text-align: center; 
-      border: 1px solid var(--accent-blue); position: relative;
+      padding: 30px 20px; border-radius: 15px; text-align: center; border: 1px solid var(--accent-blue);
     }
     .hipo-btn { 
-      display: inline-block; margin-top: 15px; padding: 12px 30px; 
+      display: inline-block; margin-top: 15px; padding: 12px 25px; 
       border-radius: 8px; font-weight: 800; text-decoration: none; 
-      background: #00d1ff; color: #000; font-size: 15px;
+      background: #00d1ff; color: #000; /* CYAN */
     }
-    .hipo-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
 
-    /* MENU */
-    .menu-hamburger { font-size: 26px; cursor: pointer; color: var(--accent-blue); }
-    .hamburger-menu {
-      position: fixed; top: 70px; right: 20px; background: #0a1a2e;
-      border: 1px solid var(--border); border-radius: 12px; display: none;
-      flex-direction: column; z-index: 1001;
-    }
-    .hamburger-menu div { padding: 15px 25px; cursor: pointer; border-bottom: 1px solid var(--border); }
-
-    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } .card img { height: 170px; } }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } .card img { height: 160px; } }
   </style>
 </head>
 <body>
 
-<div id="galaxy-container">
-  <div class="nebula" style="top: -10%; left: -10%; background: radial-gradient(circle, rgba(0, 209, 255, 0.05) 0%, transparent 70%);"></div>
-  <div class="nebula" style="bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(138, 43, 226, 0.05) 0%, transparent 70%);"></div>
-  <canvas id="stars"></canvas>
-</div>
+<div class="nebula-overlay"></div>
 
 <header class="header">
   <div class="logo">ADZM<span>.</span></div>
-  <div class="menu-hamburger" onclick="toggleMenu()">&#9776;</div>
+  <div onclick="toggleMenu()" style="cursor:pointer; color:var(--accent-blue); font-size:24px;">&#9776;</div>
 </header>
 
-<div id="hamburgerMenu" class="hamburger-menu">
-  <div onclick="switchTab('articles')">Articles</div>
-  <div onclick="switchTab('vendeurs')">Vendeurs</div>
+<div id="hamburgerMenu" style="position:fixed; top:70px; right:20px; background:#0a1a2e; border:1px solid var(--border); border-radius:12px; display:none; flex-direction:column; z-index:1001;">
+  <div style="padding:15px 25px; cursor:pointer;" onclick="switchTab('articles')">Articles</div>
+  <div style="padding:15px 25px; cursor:pointer;" onclick="switchTab('vendeurs')">Vendeurs</div>
 </div>
 
 <div class="banner">
@@ -153,8 +126,9 @@
   <div class="search">
     <input type="text" id="searchInput" placeholder="Rechercher..." onkeyup="renderAll()" />
   </div>
-  <select id="sortOption" class="sort-select" onchange="renderAll()" style="background:#0a1a2e; color:white; border-radius:10px; border:1px solid var(--border); padding:10px;">
-    <option value="recent">Nouveautés</option>
+  <select id="sortOption" class="sort-select" onchange="renderAll()">
+    <option value="recent">Plus récent (Défaut)</option>
+    <option value="oldest">Plus ancien</option>
     <option value="low">Prix croissant</option>
     <option value="high">Prix décroissant</option>
   </select>
@@ -165,13 +139,13 @@
 
 <div id="hipoOverlay" class="hipo-overlay">
   <div class="hipo-popup">
-    <button class="hipo-close" onclick="closeHipo()">✕</button>
     <h2>REJOINS HIPOBUY !</h2>
     <p>S'inscrire sur Hipobuy pour bénéficier de coupons</p>
     <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">S'INSCRIRE ICI</a>
     <label style="display:block; margin-top:15px; font-size:11px; color:#888; cursor:pointer;">
       <input type="checkbox" id="hipoDontShow"> Ne plus afficher
     </label>
+    <button onclick="closeHipo()" style="background:none; border:none; color:white; margin-top:15px; cursor:pointer; font-size:12px; opacity:0.6;">Fermer</button>
   </div>
 </div>
 
@@ -181,20 +155,21 @@
   let vendeurs = [];
 
   function toggleMenu(){
-    const menu = document.getElementById('hamburgerMenu');
-    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    const m = document.getElementById('hamburgerMenu');
+    m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
   }
 
-  function switchTab(tabName) {
-    currentTab = tabName;
+  function switchTab(t) {
+    currentTab = t;
     document.getElementById('searchInput').value = ''; // Efface la recherche
-    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-    document.getElementById(tabName).style.display = 'block';
-    toggleMenu();
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.getElementById(t).style.display = 'block';
+    if(m.style.display === 'flex') toggleMenu();
     renderAll();
   }
 
   function addArticle(name, price, image, link){
+    // Ajout d'un ID pour le tri par défaut
     articles.push({name, price: parseFloat(price), image, link, id: articles.length});
     renderArticles();
   }
@@ -204,10 +179,14 @@
     const filter = document.getElementById('searchInput').value.toLowerCase();
     const sort = document.getElementById('sortOption').value;
     grid.innerHTML = '';
+    
     let filtered = articles.filter(a => a.name.toLowerCase().includes(filter));
-    if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
+
+    // LOGIQUE DE TRI
+    if(sort === 'recent') filtered.sort((a,b) => b.id - a.id); // Plus récent en haut
+    else if(sort === 'oldest') filtered.sort((a,b) => a.id - b.id); // Plus ancien en haut
+    else if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
     else if(sort === 'high') filtered.sort((a,b) => b.price - a.price);
-    else filtered.sort((a,b) => b.id - a.id);
 
     filtered.forEach(a => {
       grid.innerHTML += `<div class="card" onclick="window.open('${a.link}','_blank')">
@@ -217,47 +196,35 @@
     });
   }
 
-  // Articles & Vendeurs
+  function addVendeur(n,i,l){ vendeurs.push({name:n, image:i, link:l}); renderVendeurs(); }
+  function renderVendeurs(){
+    const grid = document.getElementById('vendeurGrid');
+    const filter = document.getElementById('searchInput').value.toLowerCase();
+    grid.innerHTML = '';
+    vendeurs.filter(v => v.name.toLowerCase().includes(filter)).forEach(v => {
+      grid.innerHTML += `<div class="card" onclick="window.open('${v.link}','_blank')">
+        <img src="${v.image}"><div class="card-body"><span class="name">${v.name}</span><div style="color:var(--accent-blue)">→</div></div>
+      </div>`;
+    });
+  }
+
+  function renderAll() { if(currentTab==='articles') renderArticles(); else renderVendeurs(); }
+
+  // DATA
   addArticle("Pull Nike Tech",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
   addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
   addArticle("Ensemble nike tech gris", 23, "https://image2url.com/r2/default/gifs/1773864516556-14f62d6d-2f6a-48d2-a8b5-68da291cd93f.gif", "https://hipobuy.com/pages/goods/details?spuNo=931344771025&channel=0&inviteCode=E6EMQHWWA");
+
+  addVendeur("Lightning (running)", "https://i.imgur.com/JhLK8Qo.jpeg", "https://lightningrun.x.yupoo.com/albums");
 
   function closeHipo() {
     if(document.getElementById("hipoDontShow").checked) localStorage.setItem("hideHipo2026", "true");
     document.getElementById("hipoOverlay").style.display = "none";
   }
 
-  // ANIMATION ETOILES SCINTILLANTES
-  const canvas = document.getElementById('stars');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-  function initStars() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    stars = [];
-    for(let i=0; i<200; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 1.5,
-        opacity: Math.random(),
-        speed: Math.random() * 0.02
-      });
-    }
-  }
-  function drawStars() {
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    stars.forEach(s => {
-      ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(s.opacity))})`;
-      ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill();
-      s.opacity += s.speed;
-    });
-    requestAnimationFrame(drawStars);
-  }
-
   window.onload = () => {
-    initStars(); drawStars();
     if(localStorage.getItem("hideHipo2026") !== "true") {
-      setTimeout(() => { document.getElementById("hipoOverlay").style.display = "flex"; }, 1500);
+      setTimeout(() => { document.getElementById("hipoOverlay").style.display = "flex"; }, 2000);
     }
   };
 </script>
