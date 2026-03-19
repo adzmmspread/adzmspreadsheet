@@ -14,33 +14,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
   
   <style>
-    /* NOUVELLE PALETTE MYRA */
     :root {
-      --bg-deep: #051120;       /* Bleu nuit profond de l'image */
-      --bg-card: #0a1a2e;       /* Cartes légèrement plus claires */
-      --accent-blue: #00d1ff;   /* Cyan du logo Myra */
-      --border: #162a44;        /* Bordures subtiles */
+      /* Mélange Image Myra + Galaxy */
+      --bg-deep: #030816; 
+      --bg-gradient: radial-gradient(circle at center, #0a1a2e 0%, #030816 100%);
+      --bg-card: rgba(10, 26, 46, 0.7);
+      --accent-blue: #00d1ff; 
+      --border: rgba(0, 209, 255, 0.2);
       --text-main: #ffffff;
-      --text-dim: #94a3b8;      /* Gris bleuté */
+      --text-dim: #94a3b8;
     }
 
     body {
       margin: 0; padding: 0;
       font-family: 'Montserrat', sans-serif;
-      background: var(--bg-deep); color: var(--text-main);
+      background: var(--bg-deep);
+      background-image: var(--bg-gradient);
+      color: var(--text-main);
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
     canvas#stars {
       position: fixed; top:0; left:0; width:100%; height:100%; z-index:0;
-      opacity: 0.5; /* Plus discret pour laisser place au bleu profond */
     }
 
-    /* HEADER STYLE MYRA */
+    /* HEADER */
     .header {
       position: sticky; top:0;
-      background: rgba(5, 17, 32, 0.9);
-      backdrop-filter: blur(15px);
+      background: rgba(3, 8, 22, 0.85);
+      backdrop-filter: blur(12px);
       display: flex; justify-content: space-between; align-items: center;
       padding: 15px 25px;
       border-bottom: 1px solid var(--border);
@@ -53,81 +56,91 @@
     /* FILTRES & RECHERCHE */
     .controls-container {
       padding: 20px 25px 5px;
-      display: flex; flex-wrap: wrap; gap: 15px;
+      display: flex; flex-wrap: wrap; gap: 10px;
       position: relative; z-index: 2;
       max-width: 1200px; margin: auto;
     }
 
     .search { flex: 2; min-width: 200px; }
     .search input {
-      width: 100%; padding: 12px 20px; border-radius: 12px;
-      border: 1px solid var(--border); background: var(--bg-card);
+      width: 100%; padding: 12px 18px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.05);
       color: white; font-size: 15px; outline: none; transition: 0.3s;
     }
-    .search input:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 209, 255, 0.2); }
+    .search input:focus { border-color: var(--accent-blue); background: rgba(255,255,255,0.1); }
 
     .sort-select {
-      flex: 1; min-width: 150px; padding: 12px; border-radius: 12px;
-      background: var(--bg-card); color: white; border: 1px solid var(--border);
+      flex: 1; min-width: 140px; padding: 12px; border-radius: 10px;
+      background: #0a1a2e; color: white; border: 1px solid var(--border);
       cursor: pointer; outline: none;
     }
 
     /* BANNER */
     .banner {
-      text-align: center; padding: 12px; font-size: 12px;
-      background: rgba(0, 209, 255, 0.05);
-      color: var(--accent-blue); border-bottom: 1px solid var(--border);
-      text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;
+      text-align: center; padding: 15px;
+      z-index: 2; position: relative;
     }
+    .banner .main-title { color: var(--accent-blue); font-weight: 800; font-size: 14px; letter-spacing: 1px; }
+    .banner .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; margin-top: 5px; display: block; opacity: 0.8; }
 
     /* GRID & CARDS */
     .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px; padding: 20px;
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 15px; padding: 15px;
       z-index:1; position: relative;
       max-width: 1200px; margin: auto;
     }
 
     .card {
-      background: var(--bg-card); border-radius: 18px;
+      background: var(--bg-card); border-radius: 12px;
       overflow: hidden; cursor: pointer;
       border: 1px solid var(--border);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: 0.3s ease;
+      backdrop-filter: blur(5px);
     }
-    .card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent-blue); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
     
-    .card img { width: 100%; height: 180px; object-fit: cover; }
-
-    .card-body { 
-        padding: 12px; display: flex; justify-content: space-between; align-items: flex-end; 
+    /* Image aplatie pour format rectangle */
+    .card img { 
+      width: 100%; 
+      height: 140px; /* Hauteur réduite pour aplatir */
+      object-fit: cover; 
     }
-    .card-body .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; display: block; }
-    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 15px; }
-    .card-arrow { color: var(--accent-blue); font-size: 18px; opacity: 0.7; }
 
-    /* POPUP (Gardé fonctionnel) */
-    .hipo-overlay { position: fixed; inset: 0; backdrop-filter: blur(8px); background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-    .hipo-popup { background: #0a1a2e; color: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; text-align: center; border: 1px solid var(--border); }
-    .hipo-btn { display: inline-block; padding: 14px 25px; border-radius: 50px; font-weight: bold; text-decoration: none; color: white; background: var(--accent-blue); color: #000; transition: 0.3s; }
-    .hipo-close { position: absolute; top: 15px; right: 18px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+    .card-body { padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .card-body .name { font-weight: 600; font-size: 13px; color: #eee; }
+    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 14px; display: block; }
+    .card-arrow { color: var(--accent-blue); font-size: 16px; }
+
+    /* POPUP DESIGN GALAXY */
+    .hipo-overlay { 
+      position: fixed; inset: 0; backdrop-filter: blur(10px); 
+      background: rgba(0,0,0,0.8); display: flex; 
+      align-items: center; justify-content: center; z-index: 9999; 
+    }
+    .hipo-popup { 
+      background: linear-gradient(145deg, #0a1a2e, #030816); 
+      color: white; width: 85%; max-width: 380px; padding: 35px 25px; 
+      border-radius: 20px; text-align: center; border: 1px solid var(--accent-blue);
+      position: relative; box-shadow: 0 0 30px rgba(0, 209, 255, 0.3);
+    }
+    .hipo-btn { 
+      display: block; margin: 20px auto 0; padding: 15px; border-radius: 10px; 
+      font-weight: 800; text-decoration: none; 
+      background: var(--accent-blue); color: #000; transition: 0.3s; 
+    }
+    .hipo-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; }
 
     /* MENU HAMBURGER */
     .menu-hamburger { font-size: 26px; cursor: pointer; color: var(--accent-blue); }
     .hamburger-menu {
-      position: fixed; top: 70px; right: 20px; background: var(--bg-card);
-      border: 1px solid var(--border); border-radius: 15px; display: none;
-      flex-direction: column; z-index: 1001; overflow: hidden;
+      position: fixed; top: 70px; right: 20px; background: #0a1a2e;
+      border: 1px solid var(--border); border-radius: 12px; display: none;
+      flex-direction: column; z-index: 1001;
     }
     .hamburger-menu div { padding: 15px 25px; cursor: pointer; color: white; border-bottom: 1px solid var(--border); }
-    .hamburger-menu div:hover { background: #162a44; color: var(--accent-blue); }
 
-    @media (min-width: 768px) {
-      .grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .grid { grid-template-columns: repeat(4, 1fr); }
-    }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } .card img { height: 180px; } }
   </style>
 </head>
 <body>
@@ -140,29 +153,31 @@
 </header>
 
 <div id="hamburgerMenu" class="hamburger-menu">
-  <div onclick="showTab('articles'); toggleMenu()">Articles</div>
-  <div onclick="showTab('vendeurs'); toggleMenu()">Vendeurs</div>
+  <div onclick="switchTab('articles')">Articles</div>
+  <div onclick="switchTab('vendeurs')">Vendeurs</div>
 </div>
 
-<div class="banner">MEILLEURE SÉLECTION 2026 🔥</div>
+<div class="banner">
+  <span class="main-title">MEILLEURE SÉLECTION 2026 🔥</span>
+  <span class="warning">(CERTAINS LIENS PEUVENT ÊTRE SUPPRIMÉS OU EN RUPTURE)</span>
+</div>
 
 <div class="controls-container">
   <div class="search">
     <input type="text" id="searchInput" placeholder="Rechercher..." onkeyup="renderAll()" />
   </div>
   <select id="sortOption" class="sort-select" onchange="renderAll()">
-    <option value="recent">Plus récents</option>
-    <option value="old">Plus anciens</option>
-    <option value="low">Prix : Croissant</option>
-    <option value="high">Prix : Décroissant</option>
+    <option value="recent">Nouveautés</option>
+    <option value="low">Prix croissant</option>
+    <option value="high">Prix décroissant</option>
   </select>
 </div>
 
-<div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; z-index:2; position:relative;">
-  <a href="https://t.me/adzmhipofinds" target="_blank"><img src="https://i.imgur.com/UfVEL4w.png" style="width:50px;"></a>
-  <a href="https://www.tiktok.com/@addmmyz.zx?_r=1&_t=ZS-92zeJ29mQrw" target="_blank"><img src="https://i.imgur.com/w0MAvg6.png" style="width:50px;"></a>
-  <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank"><img src="https://i.imgur.com/6zUvchk.png" style="width:50px;"></a>
-  <a href="https://discord.gg/SyJjmfYxp" target="_blank"><img src="https://i.imgur.com/aj1aMEQ.png" style="width:50px;"></a>
+<div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin:15px 0; z-index:2; position:relative;">
+  <a href="https://t.me/adzmhipofinds" target="_blank"><img src="https://i.imgur.com/UfVEL4w.png" style="width:45px;"></a>
+  <a href="https://www.tiktok.com/@addmmyz.zx?_r=1&_t=ZS-92zeJ29mQrw" target="_blank"><img src="https://i.imgur.com/w0MAvg6.png" style="width:45px;"></a>
+  <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank"><img src="https://i.imgur.com/6zUvchk.png" style="width:45px;"></a>
+  <a href="https://discord.gg/SyJjmfYxp" target="_blank"><img src="https://i.imgur.com/aj1aMEQ.png" style="width:45px;"></a>
 </div>
 
 <div id="articles" class="tab-content">
@@ -173,18 +188,15 @@
   <div class="grid" id="vendeurGrid"></div>
 </div>
 
-<footer style="text-align:center; padding:40px; color:var(--text-dim); font-size:12px;">
-  © 2026 ADZM Store — PREMIUM SELECTION
-</footer>
-
-<div id="hipoOverlay" class="hipo-overlay">
-  <div class="hipo-popup" style="position:relative;">
+<div id="hipoOverlay" class="hipo-overlay" style="display:none;">
+  <div class="hipo-popup">
     <button class="hipo-close" onclick="closeHipo()">✕</button>
-    <p style="color:var(--accent-blue); font-size:11px; letter-spacing:2px;">EXCLUSIF</p>
-    <h2>Codes Promo<br>Hipobuy</h2>
-    <p style="color:var(--text-dim); font-size:14px;">Inscris-toi pour débloquer les meilleures réductions.</p>
-    <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">S'INSCRIRE</a>
-    <label style="display:block; margin-top:20px; font-size:12px; color:#555;"><input type="checkbox" id="hipoDontShow"> Ne plus afficher</label>
+    <h2 style="margin:0; font-size:22px;">Cadeau de bienvenue 🎁</h2>
+    <p style="color:var(--text-dim); font-size:14px; margin-top:10px;">S'inscrire sur Hipobuy pour bénéficier de coupons et réductions exclusives !</p>
+    <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">RÉCUPÉRER MES COUPONS</a>
+    <label style="display:block; margin-top:20px; font-size:11px; color:var(--text-dim); cursor:pointer;">
+      <input type="checkbox" id="hipoDontShow"> Ne plus afficher
+    </label>
   </div>
 </div>
 
@@ -198,24 +210,24 @@
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
 
-  function showTab(tabName) {
+  // Effacer la barre de recherche lors du switch
+  function switchTab(tabName) {
     currentTab = tabName;
+    document.getElementById('searchInput').value = ''; // Efface la recherche
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
     document.getElementById(tabName).style.display = 'block';
-    // Cacher le tri pour les vendeurs car pas de prix
-    document.getElementById('sortOption').style.visibility = (tabName === 'vendeurs') ? 'hidden' : 'visible';
+    document.getElementById('sortOption').style.display = (tabName === 'vendeurs') ? 'none' : 'block';
+    toggleMenu();
     renderAll();
   }
 
-  // Bar unique pour les deux
   function renderAll() {
     if(currentTab === 'articles') renderArticles();
     else renderVendeurs();
   }
 
   function addArticle(name, price, image, link){
-    // On ajoute un timestamp pour le tri par date
-    articles.push({name, price: parseFloat(price), image, link, date: Date.now() + articles.length});
+    articles.push({name, price: parseFloat(price), image, link, id: articles.length});
     renderArticles();
   }
 
@@ -223,16 +235,12 @@
     const grid = document.getElementById('articleGrid');
     const filter = document.getElementById('searchInput').value.toLowerCase();
     const sort = document.getElementById('sortOption').value;
-    
     grid.innerHTML = '';
     
     let filtered = articles.filter(a => a.name.toLowerCase().includes(filter));
-
-    // TRI
     if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
     else if(sort === 'high') filtered.sort((a,b) => b.price - a.price);
-    else if(sort === 'recent') filtered.sort((a,b) => b.date - a.date);
-    else if(sort === 'old') filtered.sort((a,b) => a.date - b.date);
+    else filtered.sort((a,b) => b.id - a.id);
 
     filtered.forEach(a => {
       grid.innerHTML += `
@@ -263,49 +271,51 @@
         <div class="card" onclick="window.open('${v.link}','_blank')">
           <img src="${v.image}" alt="${v.name}">
           <div class="card-body">
-            <span class="name">${v.name}</span>
+            <span class="name" style="font-size:12px;">${v.name}</span>
             <div class="card-arrow">→</div>
           </div>
         </div>`;
     });
   }
 
-  // --- TON CONTENU (NE PAS TOUCHER) ---
+  // --- CONTENU ---
   addArticle("Pull Nike Tech (je conseille pas trop le gris)",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
   addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
   addArticle("Bas Nike Trail",16.00,"https://cdn2.hipobuy.com/prod/order/D2601120671641701/checkPhotos/20260116/processed_9cea41b4-5cd2-480b-950b-c3cd7226cdf8_w.webp","https://hipobuy.com/pages/goods/details?id=7549390543&channel=WEIDIAN&inviteCode=E6EMQHWWA");
-  // ... (tous les autres addArticle)
   addArticle("Ensemble nike tech gris", 23, "https://image2url.com/r2/default/gifs/1773864516556-14f62d6d-2f6a-48d2-a8b5-68da291cd93f.gif", "https://hipobuy.com/pages/goods/details?spuNo=931344771025&channel=0&inviteCode=E6EMQHWWA");
 
   addVendeur("Aaajersey (maillots de foot)", "https://i.imgur.com/7oZ4kkL.png", "https://aaaajersey.x.yupoo.com/albums/");
   addVendeur("Lightning (running)", "https://i.imgur.com/JhLK8Qo.jpeg", "https://lightningrun.x.yupoo.com/albums");
   addVendeur("Yolo66 (paires)", "https://image2url.com/r2/default/images/1772487444358-61caa19a-1d57-4c39-8b66-98422e153246.jpg", "https://yolo66.x.yupoo.com/");
-  addVendeur("Huskyreps (nike tech, etc..)", "https://i.imgur.com/qzvfwuU.jpeg", "https://huskyreps.x.yupoo.com/");
-  // ... (tous les autres addVendeur)
 
-  // STAR ANIMATION (Version optimisée)
+  // POPUP LOGIC
+  function closeHipo() {
+    if(document.getElementById("hipoDontShow").checked) localStorage.setItem("hideHipo2026", "true");
+    document.getElementById("hipoOverlay").style.display = "none";
+  }
+
+  // STARS
   const canvas = document.getElementById('stars');
   const ctx = canvas.getContext('2d');
   let stars = [];
   function initStars() {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     stars = [];
-    for(let i=0;i<150;i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1, d:Math.random()*0.3});
+    for(let i=0;i<180;i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, d:Math.random()*0.4});
   }
   function drawStars(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='white'; ctx.beginPath();
+    ctx.fillStyle='#fff'; ctx.beginPath();
     stars.forEach(s=>{ ctx.moveTo(s.x,s.y); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); s.y+=s.d; if(s.y>canvas.height) s.y=0; });
     ctx.fill(); requestAnimationFrame(drawStars);
   }
-  initStars(); drawStars();
-  window.addEventListener('resize', initStars);
 
-  function closeHipo() {
-    if(document.getElementById("hipoDontShow").checked) localStorage.setItem("hideHipoPopup","true");
-    document.getElementById("hipoOverlay").style.display="none";
-  }
-  window.onload = () => { if(localStorage.getItem("hideHipoPopup")==="true") document.getElementById("hipoOverlay").style.display="none"; };
+  window.onload = () => {
+    initStars(); drawStars();
+    if(localStorage.getItem("hideHipo2026") !== "true") {
+      setTimeout(() => { document.getElementById("hipoOverlay").style.display = "flex"; }, 2000);
+    }
+  };
 </script>
 </body>
 </html>
