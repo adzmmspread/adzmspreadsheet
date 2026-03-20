@@ -48,13 +48,29 @@
     .logo { font-weight: 800; font-size: 22px; }
     .logo span { color: var(--accent-blue); }
 
-    .banner { text-align: center; padding: 20px; position: relative; z-index: 10; }
-    .main-title { color: var(--accent-blue); font-weight: 800; font-size: 15px; text-transform: uppercase; }
+    .banner { text-align: center; padding: 20px 10px; position: relative; z-index: 10; }
+    .main-title { color: var(--accent-blue); font-weight: 800; font-size: 16px; text-transform: uppercase; }
     .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; display: block; margin-top: 5px; opacity: 0.8; }
+
+    /* SOCIAL BUTTONS (REMIS COMME AVANT) */
+    .social-nav {
+      display: flex; justify-content: center; gap: 15px; padding: 10px;
+      flex-wrap: wrap; position: relative; z-index: 10;
+    }
+    .social-item {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: white; font-size: 10px; font-weight: 600;
+      transition: 0.3s; width: 70px;
+    }
+    .social-item:hover { transform: translateY(-3px); color: var(--accent-blue); }
+    .social-item img {
+      width: 45px; height: 45px; border-radius: 12px; margin-bottom: 5px;
+      border: 1px solid var(--border); background: var(--glass); padding: 5px;
+    }
 
     /* CONTROLS */
     .controls {
-      padding: 10px 20px; display: flex; gap: 10px; max-width: 1200px; margin: auto;
+      padding: 15px 20px; display: flex; gap: 10px; max-width: 1200px; margin: auto;
       position: relative; z-index: 10;
     }
     .search-input {
@@ -77,15 +93,15 @@
       overflow: hidden; border: 1px solid var(--border);
       transition: 0.3s; backdrop-filter: blur(10px); cursor: pointer;
     }
-    /* Optimisation : hauteur fixe pour éviter les sauts de page */
+    .card:hover { border-color: var(--accent-blue); transform: scale(1.02); }
     .card img { width: 100%; height: 130px; object-fit: cover; background: #111; }
     .card-body { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .card-body .name { font-weight: 600; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
-    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 14px; }
+    .card-body .name { font-weight: 600; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
+    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 13px; }
 
     /* POPUP */
     #popupHipo {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
       display: none; align-items: center; justify-content: center; z-index: 9999;
     }
     .hipo-popup {
@@ -95,11 +111,15 @@
     }
     .hipo-btn {
       display: inline-block; padding: 12px 25px; border-radius: 8px;
-      font-weight: 800; text-decoration: none; background: #00d1ff; color: #000;
+      font-weight: 800; text-decoration: none; background: var(--accent-blue); color: #000;
     }
     .hipo-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
 
-    @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } .card img { height: 160px; } }
+    @media (min-width: 768px) { 
+      .grid { grid-template-columns: repeat(4, 1fr); } 
+      .card img { height: 160px; }
+      .social-item img { width: 55px; height: 55px; }
+    }
   </style>
 </head>
 <body>
@@ -118,16 +138,34 @@
 
 <div class="banner">
   <span class="main-title">Meilleure Sélection 2026 🔥</span>
-  <span class="warning">(CERTAINS LIENS PEUVENT ÊTRE SUPPRIMÉS OU EN RUPTURE)</span>
+  <span class="warning">(LIENS MIS À JOUR RÉGULIÈREMENT)</span>
 </div>
 
+<nav class="social-nav">
+  <a href="https://www.tiktok.com/@adzm.finds" target="_blank" class="social-item">
+    <img src="https://www.edigitalagency.com.au/wp-content/uploads/TikTok-logo-png.png" alt="TikTok">
+    <span>TikTok</span>
+  </a>
+  <a href="https://t.me/adzmfinds" target="_blank" class="social-item">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" alt="Telegram">
+    <span>Telegram</span>
+  </a>
+  <a href="https://discord.gg/votrelien" target="_blank" class="social-item">
+    <img src="https://assets-global.website-files.com/6257adef93867e3d0394e364/6257d497e163462198086026_discord-logo-clyde-white-around.png" alt="Discord">
+    <span>Discord</span>
+  </a>
+  <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="social-item">
+    <img src="https://i.imgur.com/r6O0WqO.png" alt="Hipobuy">
+    <span>Hipobuy</span>
+  </a>
+</nav>
+
 <div class="controls">
-  <input type="text" id="searchInput" class="search-input" placeholder="Rechercher..." onkeyup="renderAll()">
+  <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un article..." onkeyup="renderAll()">
   <select id="sortOption" class="sort-select" onchange="renderAll()">
-    <option value="recent">Plus récent</option>
-    <option value="oldest">Plus ancien</option>
-    <option value="low">Prix croissant</option>
-    <option value="high">Prix décroissant</option>
+    <option value="recent">Récent</option>
+    <option value="low">Prix min</option>
+    <option value="high">Prix max</option>
   </select>
 </div>
 
@@ -138,7 +176,7 @@
   <div class="hipo-popup">
     <button class="hipo-close" onclick="closePopup()">✕</button>
     <h2>REJOINS HIPOBUY !</h2>
-    <p>S'inscrire sur Hipobuy pour bénéficier de coupons</p>
+    <p>Inscris-toi pour recevoir des coupons exclusifs sur tes commandes.</p>
     <a href="https://m.hipobuy.com/pages/register/index?inviteCode=E6EMQHWWA" target="_blank" class="hipo-btn">S'INSCRIRE ICI</a>
     <label style="display:block; margin-top:15px; font-size:11px; color:#888; cursor:pointer;">
       <input type="checkbox" id="noMore"> Ne plus afficher
@@ -151,7 +189,6 @@
   let articles = [];
   let vendeurs = [];
 
-  // CORRECTION : On ajoute à la liste sans redessiner à chaque fois
   function addArticle(name, price, image, link){
     articles.push({name, price: parseFloat(price), image, link, id: articles.length});
   }
@@ -159,56 +196,8 @@
     vendeurs.push({name:n, image:i, link:l}); 
   }
 
-  function renderArticles(){
-    const grid = document.getElementById('articleGrid');
-    const filter = document.getElementById('searchInput').value.toLowerCase();
-    const sort = document.getElementById('sortOption').value;
-    
-    let filtered = articles.filter(a => a.name.toLowerCase().includes(filter));
-    if(sort === 'recent') filtered.sort((a,b) => b.id - a.id);
-    else if(sort === 'oldest') filtered.sort((a,b) => a.id - b.id);
-    else if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
-    else if(sort === 'high') filtered.sort((a,b) => b.price - a.price);
-
-    // BATCH RENDER : On crée une seule grosse chaîne de texte
-    grid.innerHTML = filtered.map(a => `
-      <div class="card" onclick="window.open('${a.link}','_blank')">
-        <img src="${a.image}" loading="lazy">
-        <div class="card-body">
-          <div><span class="name">${a.name}</span><br><span class="price">${a.price.toFixed(2)} €</span></div>
-          <div style="color:var(--accent-blue)">→</div>
-        </div>
-      </div>`).join('');
-  }
-
-  function renderVendeurs(){
-    const grid = document.getElementById('vendeurGrid');
-    const filter = document.getElementById('searchInput').value.toLowerCase();
-    grid.innerHTML = vendeurs.filter(v => v.name.toLowerCase().includes(filter)).map(v => `
-      <div class="card" onclick="window.open('${v.link}','_blank')">
-        <img src="${v.image}" loading="lazy">
-        <div class="card-body"><span class="name">${v.name}</span><div style="color:var(--accent-blue)">→</div></div>
-      </div>`).join('');
-  }
-
-  function renderAll() { if(currentTab==='articles') renderArticles(); else renderVendeurs(); }
-  function toggleMenu() {
-    const m = document.getElementById('mobileMenu');
-    m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-  }
-  function switchTab(t) {
-    currentTab = t;
-    document.getElementById('searchInput').value = ''; 
-    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.getElementById(t).style.display = 'block';
-    toggleMenu();
-    renderAll();
-  }
-  function closePopup() {
-    if(document.getElementById("noMore").checked) localStorage.setItem("hideHipoPop", "true");
-    document.getElementById("popupHipo").style.display = "none";
-  }
-
+  // --- TES DONNÉES (Gardées intactes) ---
+  
   // --- TES DONNÉES ICI ---
   addArticle("Pull Nike Tech (je conseille pas trop le gris)",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
 addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
@@ -371,6 +360,53 @@ addVendeur("Ccoo (running)","https://i.imgur.com/IgyJaKf.jpeg","https://ccoo-run
   // ... tous tes autres articles ici
 
 
+  function renderArticles(){
+    const grid = document.getElementById('articleGrid');
+    const filter = document.getElementById('searchInput').value.toLowerCase();
+    const sort = document.getElementById('sortOption').value;
+    let filtered = articles.filter(a => a.name.toLowerCase().includes(filter));
+    if(sort === 'recent') filtered.sort((a,b) => b.id - a.id);
+    else if(sort === 'low') filtered.sort((a,b) => a.price - b.price);
+    else if(sort === 'high') filtered.sort((a,b) => b.price - a.price);
+
+    grid.innerHTML = filtered.map(a => `
+      <div class="card" onclick="window.open('${a.link}','_blank')">
+        <img src="${a.image}" loading="lazy">
+        <div class="card-body">
+          <div><span class="name">${a.name}</span><br><span class="price">${a.price.toFixed(2)} €</span></div>
+          <div style="color:var(--accent-blue)">→</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderVendeurs(){
+    const grid = document.getElementById('vendeurGrid');
+    const filter = document.getElementById('searchInput').value.toLowerCase();
+    grid.innerHTML = vendeurs.filter(v => v.name.toLowerCase().includes(filter)).map(v => `
+      <div class="card" onclick="window.open('${v.link}','_blank')">
+        <img src="${v.image}" loading="lazy">
+        <div class="card-body"><span class="name">${v.name}</span><div style="color:var(--accent-blue)">→</div></div>
+      </div>`).join('');
+  }
+
+  function renderAll() { if(currentTab==='articles') renderArticles(); else renderVendeurs(); }
+  function toggleMenu() {
+    const m = document.getElementById('mobileMenu');
+    m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+  }
+  function switchTab(t) {
+    currentTab = t;
+    document.getElementById('searchInput').value = ''; 
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.getElementById(t).style.display = 'block';
+    if(document.getElementById('mobileMenu').style.display === 'flex') toggleMenu();
+    renderAll();
+  }
+  function closePopup() {
+    if(document.getElementById("noMore").checked) localStorage.setItem("hideHipoPop", "true");
+    document.getElementById("popupHipo").style.display = "none";
+  }
+
   // CANVAS STARS
   const canvas = document.getElementById('starfield');
   const ctx = canvas.getContext('2d');
@@ -378,21 +414,20 @@ addVendeur("Ccoo (running)","https://i.imgur.com/IgyJaKf.jpeg","https://ccoo-run
   function initStars() {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     stars = [];
-    for(let i=0; i<50; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, l: Math.random()*2+1, s: Math.random()*0.5+0.2});
+    for(let i=0; i<80; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, l: Math.random()*2+1, s: Math.random()*0.5+0.2});
   }
   function drawStars() {
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
     ctx.beginPath();
     stars.forEach(s => { ctx.moveTo(s.x, s.y); ctx.lineTo(s.x, s.y+s.l); s.y+=s.s; if(s.y>canvas.height) s.y=-5; });
     ctx.stroke(); requestAnimationFrame(drawStars);
   }
 
   window.onload = () => {
-    initStars(); drawStars();
-    renderAll(); // On dessine tout UNE SEULE FOIS ici
+    initStars(); drawStars(); renderAll();
     if(localStorage.getItem("hideHipoPop") !== "true") {
-      setTimeout(() => { document.getElementById("popupHipo").style.display = "flex"; }, 1000);
+      setTimeout(() => { document.getElementById("popupHipo").style.display = "flex"; }, 1500);
     }
   };
 </script>
