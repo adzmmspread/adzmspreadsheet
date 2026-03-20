@@ -24,7 +24,6 @@
       min-height: 100vh;
     }
 
-    /* FOND GALAXIE ANIME */
     #galaxy-bg {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: var(--galaxy-vibe);
@@ -39,7 +38,6 @@
     @keyframes pulse { from { transform: scale(1); opacity: 0.5; } to { transform: scale(1.2); opacity: 0.8; } }
     canvas#starfield { position: absolute; top: 0; left: 0; pointer-events: none; }
 
-    /* HEADER */
     .header {
       position: sticky; top:0; background: rgba(2, 4, 10, 0.7);
       backdrop-filter: blur(20px); display: flex; justify-content: space-between; 
@@ -52,7 +50,6 @@
     .main-title { color: var(--accent-blue); font-weight: 800; font-size: 16px; text-transform: uppercase; }
     .warning { color: #ff4d4d; font-size: 10px; font-weight: 600; display: block; margin-top: 5px; opacity: 0.8; }
 
-    /* SOCIAL NAV (STYLE LINKTREE) */
     .social-nav {
       display: flex; justify-content: center; gap: 10px; padding: 15px;
       flex-wrap: wrap; position: relative; z-index: 10;
@@ -70,7 +67,6 @@
       object-fit: contain; padding: 5px;
     }
 
-    /* CONTROLS */
     .controls {
       padding: 10px 20px; display: flex; gap: 10px; max-width: 1200px; margin: auto;
       position: relative; z-index: 10;
@@ -84,7 +80,6 @@
       border-radius: 10px; padding: 10px; cursor: pointer;
     }
 
-    /* GRID & CARDS */
     .grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
       gap: 15px; padding: 15px; max-width: 1200px; margin: auto;
@@ -96,11 +91,31 @@
       transition: 0.3s; backdrop-filter: blur(10px); cursor: pointer;
     }
     .card img { width: 100%; height: 130px; object-fit: cover; background: #111; }
-    .card-body { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .card-body .name { font-weight: 600; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
-    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 13px; }
+    
+    .card-body { 
+      padding: 12px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-start; /* Aligné en haut pour laisser de la place au texte */
+      min-height: 50px;
+    }
 
-    /* POPUP */
+    /* CORRECTION DU NOM TROP LONG ICI */
+    .card-body .name { 
+      font-weight: 600; 
+      font-size: 11px; 
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* 2 lignes max */
+      -webkit-box-orient: vertical;
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      white-space: normal; 
+      max-width: 85%; 
+      line-height: 1.3;
+    }
+
+    .card-body .price { color: var(--accent-blue); font-weight: 800; font-size: 13px; margin-top: 4px; display: block; }
+
     #popupHipo {
       position: fixed; inset: 0; background: rgba(0,0,0,0.8);
       display: none; align-items: center; justify-content: center; z-index: 9999;
@@ -201,7 +216,7 @@
   // --- DONNÉES ---
   
   // --- TES DONNÉES ICI ---
-  addArticle("Pull Nike Tech (je conseille pas trop le gris)",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
+addArticle("Pull Nike Tech (je conseille pas trop le gris)",16.00,"https://i.imgur.com/glqnO1W.jpeg","https://hipobuy.com/pages/goods/details?id=915958135358&channel=1688&inviteCode=E6EMQHWWA");
 addArticle("T-shirt Nike Running",5.00,"https://i.imgur.com/vUvVsy1.jpeg","https://hipobuy.com/pages/goods/details?id=979095603924&channel=1688&inviteCode=E6EMQHWWA");
 addArticle("Bas Nike Trail",16.00,"https://cdn2.hipobuy.com/prod/order/D2601120671641701/checkPhotos/20260116/processed_9cea41b4-5cd2-480b-950b-c3cd7226cdf8_w.webp","https://hipobuy.com/pages/goods/details?id=7549390543&channel=WEIDIAN&inviteCode=E6EMQHWWA");
 addArticle("Therma fit verte sans manche (RUPTURE)",19.00,"https://cdn2.hipobuy.com/prod/order/D2601120465853267/checkPhotos/20260117/processed_11c9ec3b-8c94-4c5c-99d7-afd8b1aee53c_w.webp","https://hipobuy.com/pages/goods/details?id=7610197237&channel=WEIDIAN&inviteCode=E6EMQHWWA");
@@ -320,7 +335,7 @@ addArticle("Maillot orange paris fc 25/26",12,"https://cdn2.hipobuy.com/prod/ord
 addArticle("T-shirt running division rare authentique",27,"https://i.imgur.com/YegML4T.jpeg","https://hipobuy.com/pages/goods/details?spuNo=814490598720&channel=1&inviteCode=E6EMQHWWA");
 addArticle("Bas nike swoosh gris",12,"https://cdn2.hipobuy.com/prod/order/D2601180491501369/checkPhotos/20260120/processed_de655ffb-2edd-46ac-be84-e71f436c5004_w.webp","https://hipobuy.com/pages/goods/details?spuNo=6175737688&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Haut nike tech noir 2 poches",18,"https://cdn2.hipobuy.com/prod/order/D2601151894923505/checkPhotos/20260118/processed_b96f4610-6fc1-452d-bd65-b091fa3f90f4_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7304871293&channel=weidian&inviteCode=E6EMQHWWA");
-addArticle("Dior b30",77,"https://cdn2.hipobuy.com/prod/order/D2602050685425437/checkPhotos/20260207/processed_e19edd3c-6247-4223-95ae-bb3951b6caa4_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7540377095&channel=weidian&inviteCode=E6EMQHWWA");
+addArticle("Dior b30",75,"https://cdn2.hipobuy.com/prod/order/D2602050685425437/checkPhotos/20260207/processed_e19edd3c-6247-4223-95ae-bb3951b6caa4_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7540377095&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Veste nike miller ",14,"https://cdn2.hipobuy.com/prod/order/D2602140611566844/checkPhotos/20260227/processed_13be0eca-a405-4fc8-9755-8176529472dc_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7524338467&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Veste division rouge",24,"https://cdn2.hipobuy.com/prod/order/D2602061355974041/checkPhotos/20260210/processed_e52473f4-3f6c-4793-af85-0c6cf1d1137f_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7559215689&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Nike tech kangourou noir et gris (je conseille pas vraiment le gris)", 20, "https://cdn2.hipobuy.com/prod/order/D2602190133005586/checkPhotos/20260302/processed_a8d17034-c252-4ac5-8523-c451e5f20e5c_w.webp", "https://hipobuy.com/pages/goods/details?spuNo=7642286358&channel=weidian&inviteCode=E6EMQHWWA");
@@ -330,9 +345,9 @@ addArticle("Yezzy boost 350 v2 (PLUSIEURS COULEURS)",16,"https://cdn2.hipobuy.co
 addArticle("Sacoche gucci",10,"https://i.imgur.com/NVNrCyS.png","https://hipobuy.com/pages/goods/details?spuNo=988033907249&channel=0&inviteCode=E6EMQHWWA");
 addArticle("T-shirt nike running division",11,"https://i.imgur.com/Fwt3eIw.jpeg","https://hipobuy.com/pages/goods/details?spuNo=7697173901&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Nouveau bas aeroswift (pas serré)",18,"https://i.imgur.com/QbrCkDk.jpeg","https://hipobuy.com/pages/goods/details?spuNo=7703263973&channel=weidian&inviteCode=E6EMQHWWA");
-addArticle("Bas nike phenom elite (reppro)",19,"https://cdn2.hipobuy.com/prod/order/D2603141247565683/checkPhotos/20260319/processed_e75e9de8-72d1-4250-afdf-cd78a0c0911e_w.webp","https://hipobuy.com/pages/goods/details?spuNo=7699712371&channel=weidian&inviteCode=E6EMQHWWA");
+addArticle("Bas nike phenom elite (reppro)",19,"https://i.imgur.com/ytX7eJu.jpeg","https://hipobuy.com/pages/goods/details?spuNo=7699712371&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Phenom elite tokyo 3 gouttes",19,"https://i.imgur.com/gMxKjKE.jpeg","https://hipobuy.com/pages/goods/details?spuNo=7654417303&channel=weidian&inviteCode=E6EMQHWWA");
-addArticle("Bas nike phenom elite ccoo", 18, "https://cdn2.hipobuy.com/prod/order/D2603052337327387/checkPhotos/20260312/processed_689f61f4-aa85-4757-82de-e9c80bcf0ed3_w.webp", "https://hipobuy.com/pages/goods/details?spuNo=7697090939&channel=weidian&inviteCode=E6EMQHWWA");
+addArticle("Bas phenom elite ccoo", 18, "https://cdn2.hipobuy.com/prod/order/D2603052337327387/checkPhotos/20260312/processed_689f61f4-aa85-4757-82de-e9c80bcf0ed3_w.webp", "https://hipobuy.com/pages/goods/details?spuNo=7697090939&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Haut demi-zip nike (PLUSIEURS COULEURS)", 14, "https://i.imgur.com/qPlmmyO.jpeg", "https://hipobuy.com/pages/goods/details?spuNo=1029237330025&channel=1&inviteCode=E6EMQHWWA");
 addArticle("Haut tempo machine running nike", 26, "https://i.imgur.com/xYqFFi1.jpeg", "https://hipobuy.com/pages/goods/details?spuNo=7707132130&channel=weidian&inviteCode=E6EMQHWWA");
 addArticle("Veste therma-fit nike avec manches (PLUSIEURS COULEURS)", 24, "https://cdn2.hipobuy.com/prod/order/D2603110338351947/checkPhotos/20260315/processed_91ea44ce-c8f8-4aa1-b863-3b5639430893_w.webp", "https://hipobuy.com/pages/goods/details?spuNo=7612919975&channel=weidian&inviteCode=E6EMQHWWA");
@@ -362,6 +377,7 @@ addVendeur("Ccoo (running)","https://i.imgur.com/IgyJaKf.jpeg","https://ccoo-run
   // ... tous tes autres articles ici
 
 
+
   function renderArticles(){
     const grid = document.getElementById('articleGrid');
     const filter = document.getElementById('searchInput').value.toLowerCase();
@@ -375,8 +391,11 @@ addVendeur("Ccoo (running)","https://i.imgur.com/IgyJaKf.jpeg","https://ccoo-run
       <div class="card" onclick="window.open('${a.link}','_blank')">
         <img src="${a.image}" loading="lazy">
         <div class="card-body">
-          <div><span class="name">${a.name}</span><br><span class="price">${a.price.toFixed(2)} €</span></div>
-          <div style="color:var(--accent-blue)">→</div>
+          <div style="width:100%;">
+             <span class="name">${a.name}</span>
+             <span class="price">${a.price.toFixed(2)} €</span>
+          </div>
+          <div style="color:var(--accent-blue); margin-top:5px;">→</div>
         </div>
       </div>`).join('');
   }
@@ -409,7 +428,6 @@ addVendeur("Ccoo (running)","https://i.imgur.com/IgyJaKf.jpeg","https://ccoo-run
     document.getElementById("popupHipo").style.display = "none";
   }
 
-  // STARFIELD
   const canvas = document.getElementById('starfield');
   const ctx = canvas.getContext('2d');
   let stars = [];
