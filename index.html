@@ -138,54 +138,6 @@
       .price-range { flex-direction: column; }
     }
   </style>
-
-  <!-- SDK Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-     const firebaseConfig = {
-      apiKey: "AIzaSyBKyVACeojtFfDJB1s8jqw8Tuk5nWyJry4",
-      authDomain: "adzmspreadsheet.firebaseapp.com",
-      databaseURL: "https://adzmspreadsheet-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "adzmspreadsheet",
-      storageBucket: "adzmspreadsheet.firebasestorage.app",
-      messagingSenderId: "746156880460",
-      appId: "1:746156880460:web:8dcb2316d668ab84bcfae9",
-      measurementId: "G-N6W8WC5HMQ"
-    };
-
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const articlesRef = ref(db, 'articles');
-
-    window.articles = [];
-
-    // Écoute en temps réel : Dès que la BDD change, le site se met à jour chez TOUT LE MONDE
-    onValue(articlesRef, (snapshot) => {
-      const data = snapshot.val();
-      window.articles = [];
-      if (data) {
-        Object.keys(data).forEach(key => {
-          window.articles.push({ firebaseKey: key, ...data[key] });
-        });
-      }
-      renderArticles();
-    });
-
-    window.fbSave = function(id, data) {
-      if (id) {
-        set(ref(db, 'articles/' + id), data);
-      } else {
-        push(articlesRef, data);
-      }
-    };
-
-    window.fbDelete = function(key) {
-      remove(ref(db, 'articles/' + key));
-    };
-  </script>
 </head>
 <body>
 
@@ -244,8 +196,9 @@
     </div>
 
     <div class="admin-controls">
-      <p style="color:var(--success); margin-bottom: 10px; font-weight:bold;">🟢 Mode Éditeur En Direct (Firebase)</p>
+      <p style="color:var(--success); margin-bottom: 10px; font-weight:bold;">🟢 Mode Éditeur (Owner)</p>
       <button class="btn-admin" onclick="openModal('add')"><i class="fa-solid fa-plus"></i> Ajouter un article</button>
+      <button class="btn-admin" onclick="exportData()"><i class="fa-solid fa-code"></i> Copier le code pour GitHub</button>
       <button class="btn-admin" onclick="logoutAdmin()" style="background: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Quitter</button>
     </div>
 
@@ -260,7 +213,7 @@
     <div class="modal">
       <button class="modal-close" onclick="closeModal('articleModal')"><i class="fa-solid fa-xmark"></i></button>
       <h2 id="modalTitle">Ajouter un article</h2>
-      <input type="hidden" id="editKey">
+      <input type="hidden" id="editId">
       
       <div class="form-group">
         <label>Nom de l'article</label>
@@ -296,10 +249,19 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = "adzmowner927";
+    const ADMIN_PASSWORD = "adzmowner";
     let isAdmin = localStorage.getItem("adzm_isAdmin") === "true";
     
     if(isAdmin) document.body.classList.add("admin-active");
+
+    // MODIFIE CETTE LISTE DIRECTEMENT SUR GITHUB POUR MISE À JOUR PERMANENTE
+    const defaultArticles = [
+      { id: 1, name: "Veste Arc'teryx Alpha SV", price: 45, img: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&q=80&w=600", link: "#" },
+      { id: 2, name: "Sneakers AJ4 Black Cat", price: 35, img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&q=80&w=600", link: "#" },
+      { id: 3, name: "Ensemble Nike Tech Fleece Gris", price: 28, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600", link: "#" }
+    ];
+
+    let articles = JSON.parse(localStorage.getItem('adzm_articles')) || defaultArticles;
 
     function renderArticles() {
       const grid = document.getElementById('articleGrid');
@@ -310,20 +272,21 @@
       const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
       const sortOpt = document.getElementById('sortOption').value;
 
-      let filtered = (window.articles || []).filter(item => {
+      let filtered = articles.filter(item => {
         return item.name.toLowerCase().includes(search) && (item.price >= minPrice && item.price <= maxPrice);
       });
 
       if (sortOpt === 'low') filtered.sort((a, b) => a.price - b.price);
       else if (sortOpt === 'high') filtered.sort((a, b) => b.price - a.price);
+      else filtered.sort((a, b) => b.id - a.id);
 
       filtered.forEach(item => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
           <div class="admin-card-actions">
-            <button class="btn-admin btn-icon" onclick="openModal('edit', '${item.firebaseKey}')" style="background:#3b82f6"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn-admin btn-icon" onclick="deleteArticle('${item.firebaseKey}')" style="background:var(--danger)"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn-admin btn-icon" onclick="openModal('edit', ${item.id})" style="background:#3b82f6"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-admin btn-icon" onclick="deleteArticle(${item.id})" style="background:var(--danger)"><i class="fa-solid fa-trash"></i></button>
           </div>
           <img src="${item.img}" alt="${item.name}" class="card-img" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Introuvable'">
           <div class="card-body">
@@ -355,18 +318,18 @@
       document.body.classList.remove("admin-active");
     }
 
-    function openModal(action, key = null) {
+    function openModal(action, id = null) {
       if(action === 'add' || action === 'edit') {
         document.getElementById('articleModal').style.display = 'flex';
         if(action === 'edit') {
-          const item = window.articles.find(a => a.firebaseKey === key);
-          document.getElementById('editKey').value = item.firebaseKey;
+          const item = articles.find(a => a.id === id);
+          document.getElementById('editId').value = item.id;
           document.getElementById('formName').value = item.name;
           document.getElementById('formPrice').value = item.price;
           document.getElementById('formImg').value = item.img;
           document.getElementById('formLink').value = item.link;
         } else {
-          document.getElementById('editKey').value = "";
+          document.getElementById('editId').value = "";
           document.getElementById('formName').value = "";
           document.getElementById('formPrice').value = "";
           document.getElementById('formImg').value = "";
@@ -378,7 +341,7 @@
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function saveArticle() {
-      const key = document.getElementById('editKey').value;
+      const id = document.getElementById('editId').value;
       const name = document.getElementById('formName').value;
       const price = parseFloat(document.getElementById('formPrice').value);
       const img = document.getElementById('formImg').value;
@@ -386,18 +349,35 @@
 
       if(!name || !price || !img || !link) return alert("Remplis tous les champs.");
 
-      window.fbSave(key || null, { name, price, img, link });
+      if (id) {
+        const idx = articles.findIndex(a => a.id == id);
+        articles[idx] = { id: parseInt(id), name, price, img, link };
+      } else {
+        articles.push({ id: Date.now(), name, price, img, link });
+      }
+
+      localStorage.setItem('adzm_articles', JSON.stringify(articles));
       closeModal('articleModal');
+      renderArticles();
     }
 
-    function deleteArticle(key) {
-      if(confirm("Supprimer définitivement cet article ?")) {
-        window.fbDelete(key);
+    function deleteArticle(id) {
+      if(confirm("Supprimer ?")) {
+        articles = articles.filter(a => a.id !== id);
+        localStorage.setItem('adzm_articles', JSON.stringify(articles));
+        renderArticles();
       }
     }
+
+    // Copie la liste au format JSON pour coller dans le code GitHub si besoin
+    function exportData() {
+      navigator.clipboard.writeText(JSON.stringify(articles, null, 2));
+      alert("Code copié dans le presse-papier ! Tu peux le remplacer dans le fichier sur GitHub.");
+    }
+
+    window.onload = renderArticles;
   </script>
-</body>
-  </div>
+</div>
 </div>
 
 <script>
